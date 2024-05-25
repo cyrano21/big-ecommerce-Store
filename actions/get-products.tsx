@@ -23,7 +23,12 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     },
   });
 
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.statusText}`);

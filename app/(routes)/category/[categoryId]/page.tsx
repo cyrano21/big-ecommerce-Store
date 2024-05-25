@@ -26,11 +26,15 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
   params,
   searchParams,
 }) => {
+  const storeId = "c9be10a3-5539-46cc-befc-c005d28eeb11"; // Remplacez par votre storeId réel
+
   const products = await getProducts({
     categoryId: params.categoryId,
     colorId: searchParams.colorId,
     sizeId: searchParams.sizeId,
+    storeId: storeId, // Ajoutez cette ligne
   });
+
   const sizes = await getSizes();
   const colors = await getColors();
   const category = await getCategory(params.categoryId);
@@ -60,4 +64,5 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
     </div>
   );
 };
+
 export default CategoryPage;
