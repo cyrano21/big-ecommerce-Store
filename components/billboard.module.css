@@ -1,0 +1,61 @@
+.billboardContainer {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .billboardContainer {
+    padding: 2rem;
+  }
+}
+
+.billboardImage {
+  border-radius: 0.75rem;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-size: cover;
+}
+
+@media (min-width: 768px) {
+  .billboardImage {
+    aspect-ratio: 2.4 / 1;
+  }
+}
+
+.billboardOverlay {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.billboardText {
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.75);
+}
+
+@media (min-width: 640px) {
+  .billboardText {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .billboardText {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .billboardText {
+    font-size: 6rem;
+  }
+}
