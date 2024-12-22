@@ -23,16 +23,18 @@ const Gallery: React.FC<GalleryProps> = ({ images = [] }) => {
           onChange={setSelectedImageIndex}
         >
           <Tab.Panels className="aspect-square w-full">
-            <Tab.Panel>
-              <div className="aspect-square relative w-full sm:rounded-lg overflow-hidden">
-                <Image
-                  src={images[selectedImageIndex].url}
-                  alt="Product Image"
-                  fill
-                  className="object-cover object-center"
-                />
-              </div>
-            </Tab.Panel>
+            {images.map((image) => (
+              <Tab.Panel key={image.id}>
+                <div className="aspect-square relative w-full sm:rounded-lg overflow-hidden">
+                  <Image
+                    src={image.url}
+                    alt="Product Image"
+                    fill
+                    className="object-cover object-center"
+                  />
+                </div>
+              </Tab.Panel>
+            ))}
           </Tab.Panels>
 
           <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
