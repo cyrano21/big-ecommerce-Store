@@ -45,8 +45,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
           <Image
             src={data?.images?.[0]?.url}
             alt={data.name}
-            layout="fill"
-            objectFit="cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
             className="aspect-square object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute w-full px-6 bottom-5">

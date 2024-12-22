@@ -38,7 +38,7 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
 
         {/* Dialog position */}
         <div className="fixed inset-0 z-40 flex">
-          <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 py-4 pb-6 shadow-xl">
+          <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 py-8 my-12 pb-6 shadow-xl">
             {/* Close button */}
             <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">

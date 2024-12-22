@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Category } from "@/types";
+import { LogIn } from "lucide-react";
 
 interface MainNavProps {
   data: Category[];
@@ -25,8 +26,8 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
   }));
 
   return (
-    <nav className="flex-1 flex items-center justify-center">
-      <div className="flex items-center space-x-4">
+    <div className="flex flex-col lg:flex-row items-center justify-between w-full">
+      <div className="flex items-center space-x-4 lg:space-x-6">
         {routes.map((route) => (
           <Link
             key={route.href}
@@ -43,12 +44,32 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
           </Link>
         ))}
       </div>
-      <div className="flex items-center space-x-6">
-        <button className="px-6 py-2 rounded-full bg-yellow-300 hover:bg-yellow-400 text-purple-900 font-medium transition-all duration-300 transform hover:scale-105">
+      
+      <div className="mt-4 lg:mt-0 lg:ml-6">
+        <button 
+          className="
+            flex 
+            items-center 
+            gap-x-2
+            px-6 
+            py-2 
+            rounded-full 
+            bg-yellow-300 
+            hover:bg-yellow-400 
+            text-purple-900 
+            font-medium 
+            transition-all 
+            duration-300 
+            transform 
+            hover:scale-105
+            group
+          "
+        >
+          <LogIn className="h-4 w-4 group-hover:rotate-12 transition-transform" />
           Login
         </button>
       </div>
-    </nav>
+    </div>
   );
 };
 

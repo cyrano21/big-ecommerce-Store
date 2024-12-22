@@ -1,10 +1,14 @@
 import React from "react";
+import { notFound } from 'next/navigation';
 import getProducts from "@/actions/get-products";
+import getProduct from "@/actions/get-product";
 import Container from "@/components/ui/container";
 import ProductList from "@/components/product-list";
-import getProduct from "@/actions/get-product";
 import Gallery from "@/components/gallery";
 import Info from "@/components/info";
+import { Product } from "@/types";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface ProductPageProps {
   params: {
@@ -12,59 +16,171 @@ interface ProductPageProps {
   };
 }
 
+const STORE_ID = "f072e5ca-1a6a-4312-81dd-23034de5f8cf";
+
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
-  const product = await getProduct(params.productId);
+  console.group('🛍️ Product Page Diagnostics');
+  console.log('🆔 Requested Product ID:', params.productId);
 
-  if (!product) {
-    return <div>Produit non trouvé</div>;
-  }
+  let product: Product | null = null;
+  let suggestedProducts: Product[] = [];
 
-  const storeId = "c9be10a3-5539-46cc-befc-c005d28eeb11"; // Add your actual storeId here
-  const suggestedProducts = await getProducts({
-    categoryId: product.category.id,
-    storeId,
-  });
+  try {
+    product = await getProduct(params.productId);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50">
-      <Container>
-        <div className="px-4 py-10 sm:px-6 lg:px-8">
-          <nav className="flex items-center text-sm mb-8">
-            <a href="/" className="text-gray-600 hover:text-purple-600 transition-colors">Accueil</a>
-            <span className="mx-2 text-gray-400">/</span>
-            <a href={`/category/${product.category.id}`} className="text-gray-600 hover:text-purple-600 transition-colors">{product.category.name}</a>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-gray-900">{product.name}</span>
-          </nav>
-          
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-12">
-            <div className="bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 rounded-2xl shadow-sm p-4">
-              <Gallery images={product.images} />
+    if (!product) {
+      console.error('❌ No product found for ID:', params.productId);
+      console.groupEnd();
+      return notFound();
+    }
+
+    console.log('✅ Product Found:', product.name);
+    
+    console.log('🔍 Fetching suggested products for category:', product.category.id);
+    suggestedProducts = await getProducts({
+      categoryId: product.category.id,
+    });
+
+    console.log('📦 Suggested Products Count:', suggestedProducts.length);
+    console.groupEnd();
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50 py-8 sm:py-12">
+        <Container>
+          <div className="px-4 sm:px-6 lg:px-8">
+            {/* Back Navigation */}
+            <div className="mb-4 sm:mb-8">
+              <Link 
+                href={`/category/${product.category.id}`} 
+                className="
+                  inline-flex 
+                  items-center 
+                  text-sm 
+                  sm:text-base
+                  text-gray-600 
+                  hover:text-purple-600 
+                  transition-colors 
+                  group
+                "
+              >
+                <ArrowLeft 
+                  className="
+                    w-4 
+                    h-4 
+                    sm:w-5 
+                    sm:h-5 
+                    mr-1 
+                    sm:mr-2 
+                    group-hover:translate-x-[-4px] 
+                    transition-transform
+                  " 
+                />
+                Retour à {product.category.name}
+              </Link>
             </div>
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <div className="bg-gradient-to-br from-white via-fuchsia-50 to-pink-50 rounded-2xl shadow-sm p-8">
-                <Info data={product} />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12">
+              <div 
+                className="
+                  bg-white 
+                  rounded-2xl 
+                  sm:rounded-3xl 
+                  shadow-xl 
+                  overflow-hidden 
+                  transform 
+                  hover:scale-[1.01] 
+                  sm:hover:scale-[1.02] 
+                  transition-transform 
+                  duration-300
+                "
+              >
+                <Gallery images={product.images} />
+              </div>
+              <div className="mt-4 sm:mt-10 px-2 sm:px-4 lg:mt-0">
+                <div 
+                  className="
+                    bg-white 
+                    rounded-2xl 
+                    sm:rounded-3xl 
+                    shadow-xl 
+                    p-4 
+                    sm:p-8 
+                    transform 
+                    hover:scale-[1.01] 
+                    sm:hover:scale-[1.02] 
+                    transition-transform 
+                    duration-300
+                  "
+                >
+                  <Info data={product} />
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 sm:mt-20 space-y-4 sm:space-y-8">
+              <div className="text-center">
+                <h2 
+                  className="
+                    text-2xl 
+                    sm:text-3xl 
+                    md:text-4xl 
+                    font-bold 
+                    bg-clip-text 
+                    text-transparent 
+                    bg-gradient-to-r 
+                    from-purple-600 
+                    to-pink-600 
+                    inline-block 
+                    mb-2 
+                    sm:mb-4
+                  "
+                >
+                  Articles similaires
+                </h2>
+                <p 
+                  className="
+                    text-xs 
+                    sm:text-base 
+                    text-gray-600 
+                    max-w-xl 
+                    mx-auto 
+                    leading-relaxed
+                  "
+                >
+                  Découvrez d&apos;autres produits qui pourraient vous plaire et compléter votre style
+                </p>
+              </div>
+              <div 
+                className="
+                  bg-white 
+                  rounded-2xl 
+                  sm:rounded-3xl 
+                  shadow-xl 
+                  p-4 
+                  sm:p-4
+                  transform 
+                  hover:scale-[1.005] 
+                  sm:hover:scale-[1.01] 
+                  transition-transform 
+                  duration-300
+                "
+              >
+                <ProductList 
+                  title="" 
+                  items={suggestedProducts} 
+                  variant="similar" 
+                />
               </div>
             </div>
           </div>
-          
-          <div className="mt-20 space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 inline-block">
-                Articles similaires
-              </h2>
-              <p className="mt-2 text-gray-600">
-                Découvrez d&apos;autres produits qui pourraient vous plaire
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50 rounded-2xl shadow-sm p-8">
-              <ProductList title="" items={suggestedProducts} />
-            </div>
-          </div>
-        </div>
-      </Container>
-    </div>
-  );
+        </Container>
+      </div>
+    );
+  } catch (error) {
+    console.error('🚨 ProductPage Error:', error);
+    console.groupEnd();
+    return notFound();
+  }
 };
 
 export default ProductPage;

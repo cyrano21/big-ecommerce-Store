@@ -4,13 +4,24 @@
     right: 20px;
     transform: translateY(-50%);
     width: 300px;
-    height: 500px;
+    max-height: 80vh;
     background: linear-gradient(to bottom right, white, #f3e7f3, #e6d5f0);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     padding: 20px;
     z-index: 50;
     overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .sidebarFilter {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-height: none;
+        margin: 20px 0;
+    }
 }
 
 .filterTitle {

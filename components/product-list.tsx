@@ -14,7 +14,8 @@ import { motion } from "framer-motion";
 
 interface ProductListProps {
   title?: string;
-  items: Product[]
+  items: Product[];
+  variant?: 'default' | 'similar';
 }
 
 const container = {
@@ -44,7 +45,8 @@ const itemVariant = {
 
 const ProductList: React.FC<ProductListProps> = ({
   title,
-  items: initialItems
+  items: initialItems,
+  variant = 'default'
 }) => {
   const [items, setItems] = useState<Product[]>(initialItems);
   const [sizes, setSizes] = useState<Size[]>([]);
@@ -75,30 +77,31 @@ const ProductList: React.FC<ProductListProps> = ({
     categoryId?: string;
   }) => {
     try {
-      const filteredProducts = await getProducts({
-        ...filters,
-        storeId: process.env.NEXT_PUBLIC_STORE_ID || ''
-      });
+      const filteredProducts = await getProducts(filters);
       setItems(filteredProducts);
     } catch (error) {
       console.error("Error filtering products:", error);
     }
   };
 
+  const gridClasses = variant === 'similar' 
+    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" 
+    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4";
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
-        {title && (
+    <div className={`px-4 sm:px-6 lg:px-8 py-8 ${variant === 'similar' ? 'py-4' : ''}`}>
+      {title && variant === 'default' && (
+        <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-        )}
-        
-        <ProductFilter 
-          sizes={sizes} 
-          colors={colors} 
-          categories={categories} 
-          onFilterChange={handleFilterChange} 
-        />
-      </div>
+          
+          <ProductFilter 
+            sizes={sizes} 
+            colors={colors} 
+            categories={categories} 
+            onFilterChange={handleFilterChange} 
+          />
+        </div>
+      )}
 
       {items.length === 0 ? (
         <NoResult />
@@ -108,7 +111,7 @@ const ProductList: React.FC<ProductListProps> = ({
             variants={container}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            className={gridClasses}
           >
             {items.map((item) => (
               <motion.div 
@@ -122,12 +125,14 @@ const ProductList: React.FC<ProductListProps> = ({
             ))}
           </motion.div>
 
-          <SidebarFilter 
-            sizes={sizes} 
-            colors={colors} 
-            categories={categories} 
-            onFilterChange={handleFilterChange} 
-          />
+          {variant === 'default' && (
+            <SidebarFilter 
+              sizes={sizes} 
+              colors={colors} 
+              categories={categories} 
+              onFilterChange={handleFilterChange} 
+            />
+          )}
         </div>
       )}
     </div>
