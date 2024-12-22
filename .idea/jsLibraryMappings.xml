@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="PROJECT" libraries="{@types/7zip-min, @types/a-big-triangle, @types/absolute, @types/accept-language-parser, @types/activex-word, @types/babel-code-frame, @types/console-ui, @types/jquery, @types/lodash, @types/node, @types/react, @types/react-app, @types/react-sizes, @types/rest, @types/tailwindcss}" />
+    <includedPredefinedLibrary name="JetClient Library" />
+  </component>
+</project>
