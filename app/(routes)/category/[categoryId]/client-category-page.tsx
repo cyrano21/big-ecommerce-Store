@@ -149,12 +149,6 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
               </div>
             )}
 
-            {selectedSizeId && products.length > 0 && products.length !== initialProducts.length && (
-              <div className="w-full bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
-                {products.length} produit(s) disponible(s) en taille "{selectedSizeName}"
-              </div>
-            )}
-
             {products.length === 0 && !selectedSizeId && <NoResult />}
             
             <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-gray-200">
@@ -217,6 +211,27 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
                   >
                     Réinitialiser les filtres
                   </button>
+                </div>
+              </div>
+            )}
+
+            {selectedSizeId && (
+              <div className="mt-12">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-gray-200">
+                  <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 tracking-wide">
+                    Collection Complète
+                  </h2>
+                </div>
+                
+                <div className={`${styles.productsGrid} gap-6 transition-all duration-300 ease-in-out`}>
+                  {initialProducts.map((item) => (
+                    <div 
+                      key={item.id} 
+                      className="transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                    >
+                      <ProductCard data={item} />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
