@@ -1,23 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Container from "@/components/ui/container";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import MainNav from "@/components/Main-nav";
 import NavbarAction from "./navbar-action";
 import { Category } from "@/types";
-import getCategories from "@/actions/get-categories";
-
-export const revalidate = 0;
 
 interface NavbarProps {
-  initialCategories: Category[];
+  categories: Category[];
 }
 
-const Navbar: React.FC<NavbarProps> = ({ initialCategories = [] }) => {
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Navbar: React.FC<NavbarProps> = ({ categories = [] }) => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,30 +46,34 @@ const Navbar: React.FC<NavbarProps> = ({ initialCategories = [] }) => {
               className="
                 flex 
                 items-center 
-                gap-x-2 
                 text-white 
+                font-bold 
+                text-xl 
                 hover:opacity-80 
-                transition-opacity 
-                duration-300
+                transition-opacity
               "
             >
-              <p className="text-2xl font-bold">
-                Store<span className="text-yellow-300">.</span>
-              </p>
+              <Image 
+                src="/logo.svg" 
+                alt="E-Store Logo" 
+                width={40} 
+                height={40} 
+                className="mr-2 rounded-full"
+                priority
+                onError={(e) => {
+                  const imgElement = e.target as HTMLImageElement;
+                  imgElement.onerror = null;
+                  imgElement.src = '/vercel.svg'; // Fallback image
+                }}
+              />
+              E-Store
             </Link>
 
             {/* Mobile Menu Toggle */}
             <div className="lg:hidden">
               <button 
                 onClick={toggleMenu} 
-                className="
-                  text-white 
-                  focus:outline-none 
-                  focus:ring-2 
-                  focus:ring-white/30 
-                  rounded-md 
-                  p-2
-                "
+                className="text-white focus:outline-none"
               >
                 {isMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -82,69 +83,69 @@ const Navbar: React.FC<NavbarProps> = ({ initialCategories = [] }) => {
               </button>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {categories && categories.length > 0 ? (
-                <MainNav data={categories} />
-              ) : (
-                <div className="text-white/50 text-center py-4">
-                  No categories available
-                </div>
-              )}
-              <NavbarAction />
-            </div>
-
-            {/* Mobile Navigation Overlay */}
+            {/* Mobile Navigation Menu */}
             {isMenuOpen && (
-              <div 
-                className="
-                  lg:hidden 
-                  fixed 
-                  inset-0 
-                  top-[72px] 
-                  bg-gradient-to-br 
-                  from-purple-700 
-                  via-fuchsia-500 
-                  to-pink-500 
-                  z-40 
-                  overflow-y-auto
-                "
-              >
-                <div className="px-4 pt-8 pb-4 space-y-4">
-                  <div className="flex flex-col space-y-4">
-                    {categories && categories.length > 0 ? (
-                      categories.map((category: Category) => (
-                        <Link
-                          key={category.id}
-                          href={`/category/${category.id}`}
-                          className="
-                            text-white 
-                            text-lg 
-                            font-medium 
-                            py-3 
-                            px-4 
-                            rounded-lg 
-                            hover:bg-white/10 
-                            transition-colors 
-                            duration-300
-                          "
-                          onClick={toggleMenu}
-                        >
-                          {category.name}
-                        </Link>
-                      ))
-                    ) : (
-                      <div className="text-white/50 text-center py-4">
-                        No categories available
-                      </div>
-                    )}
-                  </div>
-                  <div className="pt-6 border-t border-white/20">
+              <div className="
+                lg:hidden 
+                absolute 
+                top-full 
+                left-0 
+                w-full 
+                bg-gradient-to-r 
+                from-purple-700 
+                via-fuchsia-500 
+                to-pink-500 
+                shadow-lg 
+                z-50
+              ">
+                <div className="px-4 py-6">
+                  {categories && categories.length > 0 ? (
+                    categories.map((category) => (
+                      <Link
+                        key={category.id}
+                        href={`/category/${category.id}`}
+                        className="
+                          block 
+                          text-white 
+                          hover:text-yellow-300 
+                          py-2 
+                          border-b 
+                          border-white/20 
+                          last:border-b-0
+                        "
+                      >
+                        {category.name}
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="text-white">
+                      No categories available
+                    </div>
+                  )}
+                  
+                  {/* Mobile Cart Action */}
+                  <div className="mt-4 border-t border-white/20 pt-4">
                     <NavbarAction />
                   </div>
                 </div>
               </div>
             )}
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:block">
+              {categories && categories.length > 0 ? (
+                <MainNav data={categories} />
+              ) : (
+                <div className="text-white">
+                  No categories available
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="hidden lg:block">
+              <NavbarAction />
+            </div>
           </div>
         </Container>
       </nav>
@@ -152,20 +153,4 @@ const Navbar: React.FC<NavbarProps> = ({ initialCategories = [] }) => {
   );
 };
 
-export async function NavbarServer() {
-  try {
-    const fetchedCategories = await getCategories();
-    
-    // Ensure fetchedCategories is an array
-    const categories: Category[] = Array.isArray(fetchedCategories) 
-      ? fetchedCategories 
-      : [];
-    
-    return <Navbar initialCategories={categories} />;
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    return <Navbar initialCategories={[]} />;
-  }
-}
-
-export default NavbarServer;
+export default Navbar;

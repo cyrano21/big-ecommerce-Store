@@ -86,10 +86,10 @@ const ProductList: React.FC<ProductListProps> = ({
 
   const gridClasses = variant === 'similar' 
     ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" 
-    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4";
+    : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4";
 
   return (
-    <div className={`px-4 sm:px-6 lg:px-8 py-8 ${variant === 'similar' ? 'py-4' : ''}`}>
+    <div className={`px-4 sm:px-6 lg:px-8  ${variant === 'similar' ? 'py-4' : ''}`}>
       {title && variant === 'default' && (
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>

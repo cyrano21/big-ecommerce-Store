@@ -11,9 +11,19 @@ interface FilterProps {
   data: (Size | Color)[];
   name: string;
   valueKey: string;
+  onFilterChange: (filters: {
+    sizeId?: string;
+    colorId?: string;
+    categoryId?: string;
+  }) => void;
 }
 
-const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
+const Filter: React.FC<FilterProps> = ({ 
+  data, 
+  name, 
+  valueKey,
+  onFilterChange 
+}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -39,7 +49,13 @@ const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
       },
       { skipNull: true },
     );
+    
     router.push(url);
+
+    // Call the filter change handler
+    onFilterChange({
+      [valueKey]: id === current[valueKey] ? undefined : id
+    });
   };
 
   return (

@@ -1,34 +1,31 @@
 import { Color } from "@/types";
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/colors`;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://big-ecommerce-admin.vercel.app/api/f072e5ca-1a6a-4312-81dd-23034de5f8cf';
 
-export const getColors = async (): Promise<Color[]> => {
+const getColors = async (): Promise<Color[]> => {
   try {
-    console.log('Fetching colors from URL:', URL);
-    const res = await fetch(URL, {
+    console.log('Fetching colors from URL:', `${BASE_URL}/colors`);
+    const res = await fetch(`${BASE_URL}/colors`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
       },
-      credentials: 'include', // This helps with CORS and cookies
+      cache: 'no-store',
     });
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('Failed to fetch colors:', res.status, errorText);
-      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+      console.error('Colors fetch error:', errorText);
+      return [];
     }
 
     const colors = await res.json();
     console.log('Fetched colors:', colors);
     return colors;
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('Error in getColors:', error.message);
-    } else {
-      console.error('Unknown error in getColors:', error);
-    }
-    throw error;
+    console.error('Failed to fetch colors:', error);
+    return [];
   }
 };
 

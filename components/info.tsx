@@ -49,43 +49,62 @@ const Info: React.FC<InfoProps> = ({ data }) => {
         />
       </button>
 
-      {/* Product Details */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          <h1 
+      <div className="flex flex-col space-y-4">
+        <h1 
+          className="
+            text-2xl 
+            sm:text-3xl 
+            font-bold 
+            text-gray-900 
+            tracking-tight
+          "
+        >
+          {data.name}
+        </h1>
+
+        {data.description && (
+          <div 
             className="
-              text-2xl 
-              sm:text-3xl 
-              md:text-4xl 
-              font-bold 
-              text-gray-900 
-              tracking-tight 
-              group-hover:text-purple-700 
-              transition-colors 
-              mb-2 
-              sm:mb-0
+              text-gray-600
+              leading-relaxed
+              max-w-prose
+              mt-4
             "
           >
-            {data.name}
-          </h1>
-          <div className="flex items-center text-yellow-500">
+            {data.description}
+          </div>
+        )}
+
+        <div className="flex items-center gap-x-4">
+          <div className="flex items-center gap-x-2">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
                 className={`
-                  w-4 
-                  h-4 
-                  sm:w-5 
-                  sm:h-5 
+                  w-5 
+                  h-5 
+                  text-yellow-500 
                   ${i < 4 ? 'fill-current' : 'text-gray-300'}
                 `} 
               />
             ))}
-            <span className="text-xs sm:text-sm text-gray-600 ml-1 sm:ml-2">(4.0)</span>
+            <span className="text-sm font-medium text-gray-600">
+              (4.0)
+            </span>
+          </div>
+          <div 
+            className="
+              h-4 
+              w-px 
+              bg-gray-300
+            " 
+          />
+          <div className="text-sm text-gray-600">
+            {data.color.name} / {data.size.name}
           </div>
         </div>
-        
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+
+        <div className="flex items-center justify-between">
           <p 
             className="
               text-2xl 
@@ -98,9 +117,8 @@ const Info: React.FC<InfoProps> = ({ data }) => {
               sm:mb-0
             "
           >
-            <Currency value={data?.price} />
+            <Currency value={data.price} />
           </p>
-          <p className="text-xs sm:text-sm text-green-600 font-medium">En stock</p>
         </div>
       </div>
       

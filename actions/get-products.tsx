@@ -1,8 +1,7 @@
-import qs from "query-string";
 import { Product } from "@/types";
+import queryString from "query-string";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const STORE_ID = "f072e5ca-1a6a-4312-81dd-23034de5f8cf";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://big-ecommerce-admin.vercel.app/api/f072e5ca-1a6a-4312-81dd-23034de5f8cf';
 
 interface Query {
   categoryId?: string;
@@ -13,61 +12,47 @@ interface Query {
 }
 
 const getProducts = async (query: Query): Promise<Product[]> => {
-  if (!BASE_URL) {
-    console.error('❌ NEXT_PUBLIC_API_URL is not defined');
-    return [];
-  }
+  try {
+    const url = queryString.stringifyUrl({
+      url: `${BASE_URL}/products`,
+      query: {
+        storeId: query.storeId,
+        categoryId: query.categoryId,
+        colorId: query.colorId,
+        sizeId: query.sizeId,
+        isFeatured: query.isFeatured,
+      },
+    });
 
-  const url = qs.stringifyUrl({
-    url: `${BASE_URL}/products`,
-    query: {
+    console.log('Fetching products URL:', url);
+    console.log('Query parameters:', {
+      categoryId: query.categoryId,
       colorId: query.colorId,
       sizeId: query.sizeId,
-      categoryId: query.categoryId,
-      isFeatured: query.isFeatured,
       storeId: query.storeId,
-    },
-  });
+      isFeatured: query.isFeatured,
+    });
 
-  console.group('🔍 Products Fetch Diagnostics');
-  console.log('🔗 Full URL:', url);
-  console.log('📋 Query Parameters:', {
-    colorId: query.colorId,
-    sizeId: query.sizeId,
-    categoryId: query.categoryId,
-    isFeatured: query.isFeatured,
-    storeId: query.storeId,
-  });
-  console.log('🌐 Base URL:', BASE_URL);
-  console.log('🏪 Store ID:', STORE_ID);
-
-  try {
     const res = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
       },
-      cache: 'no-store'
+      cache: 'no-store',
     });
-
-    console.log('📡 Response Status:', res.status);
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('❌ Error Response Text:', errorText);
-      console.groupEnd();
+      console.error('Products fetch error:', errorText);
       return [];
     }
 
     const products = await res.json();
-    console.log('📦 Fetched Products Count:', products.length);
-    console.groupEnd();
-
+    console.log('Fetched products count:', products.length);
     return products;
   } catch (error) {
-    console.error('🚨 Products Fetch Error:', error);
-    console.groupEnd();
+    console.error('Failed to fetch products:', error);
     return [];
   }
 };

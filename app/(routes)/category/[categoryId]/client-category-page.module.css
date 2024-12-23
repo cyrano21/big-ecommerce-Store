@@ -1,0 +1,126 @@
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f5f3ff, #fdf4ff, #fef3f2);
+}
+
+.pageHeader {
+  text-align: center;
+  padding: 2.5rem 0;
+}
+
+.pageTitle {
+  font-size: 2.25rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #7c3aed, #ec4899);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.pageDescription {
+  color: #4b5563;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.billboardContainer {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.billboardContainer:hover {
+  transform: scale(1.01);
+}
+
+.categoryPageLayout {
+
+  padding: 2rem 1rem;
+}
+
+@media (max-width: 1023px) {
+  .categoryPageLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sidebarSection {
+    display: none;
+  }
+
+  .mobileFiltersSection {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .billboardContainer {
+    width: calc(100% - 16rem);
+    margin-left: auto;
+  }
+
+  .categoryPageLayout {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .mobileFiltersSection {
+    display: none;
+  }
+
+  .sidebarSection {
+    display: block !important;
+    width: 250px;
+    margin-right: 20px;
+  }
+
+  .productsSection {
+    grid-column: 2;
+    width: calc(100% - 16rem);
+    margin-left: auto;
+    flex-grow: 1;
+  }
+
+  .sidebarContainer {
+    background: linear-gradient(to bottom right, white, #f3e8ff, #fef3f2);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    position: sticky;
+    top: 3rem;
+  }
+
+  .sidebarTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    background: linear-gradient(to right, #7c3aed, #ec4899);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+  }
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .productsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .productsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.sidebarSection {
+  display: none;
+}

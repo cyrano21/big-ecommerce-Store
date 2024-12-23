@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Filter, X, CheckCircle2 } from "lucide-react";
+import clsx from "clsx";
 import { Size, Color, Category } from '@/types';
 import styles from './sidebar-filter.module.css';
-import { Filter, X } from 'lucide-react';
 
 interface SidebarFilterProps {
   sizes: Size[];
@@ -26,8 +27,26 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const filterContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleFilterChange = (type: 'size' | 'color' | 'category', value?: string) => {
+  // Gestion des clics en dehors du conteneur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterContainerRef.current && 
+        !filterContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsMobileFilterOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleFilterChange = useCallback((type: 'size' | 'color' | 'category', value?: string) => {
     let newSizeId = type === 'size' ? value : selectedSize;
     let newColorId = type === 'color' ? value : selectedColor;
     let newCategoryId = type === 'category' ? value : selectedCategory;
@@ -43,94 +62,77 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
       colorId: newColorId,
       categoryId: newCategoryId
     });
-  };
+  }, [selectedSize, selectedColor, selectedCategory, onFilterChange]);
 
-  const toggleMobileFilter = () => {
-    setIsMobileFilterOpen(!isMobileFilterOpen);
-  };
+  const resetFilters = useCallback(() => {
+    setSelectedSize(undefined);
+    setSelectedColor(undefined);
+    setSelectedCategory(undefined);
+    onFilterChange({});
+  }, [onFilterChange]);
+
+  const toggleMobileFilter = () => setIsMobileFilterOpen(!isMobileFilterOpen);
+
+  const renderFilterSection = (
+    title: string,
+    items: any[],
+    type: 'size' | 'color' | 'category',
+    selectedValue?: string
+  ) => (
+    <div className={styles.filterSection}>
+      <h3 className={styles.filterTitle}>{title}</h3>
+      <div className={styles.filterOptionsList}>
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className={clsx(styles.filterOption, {
+              [styles.selected]: selectedValue === item.id,
+            })}
+            onClick={() => handleFilterChange(type, item.id)}
+          >
+            <input 
+              type="checkbox" 
+              checked={selectedValue === item.id}
+              readOnly 
+            />
+            {item.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <>
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden fixed bottom-4 right-4 z-50">
-        <button 
-          onClick={toggleMobileFilter}
-          className="
-            bg-purple-600 
-            text-white 
-            p-3 
-            rounded-full 
-            shadow-lg 
-            hover:bg-purple-700 
-            transition-colors
-          "
-        >
-          {isMobileFilterOpen ? <X size={24} /> : <Filter size={24} />}
-        </button>
-      </div>
-
-      {/* Sidebar Filter */}
-      <div 
-        className={`
-          ${styles.sidebarFilter} 
-          ${isMobileFilterOpen ? 'block' : 'hidden lg:block'}
-        `}
+    <div ref={filterContainerRef} className={styles.filterContainer}>
+      <button
+        onClick={toggleMobileFilter}
+        className={styles.mobileFilterButton}
+        aria-expanded={isMobileFilterOpen}
       >
-        <h2 className={styles.filterTitle}>Filtres</h2>
+        {isMobileFilterOpen ? <X size={24} /> : <Filter size={24} />}
+      </button>
 
-        {/* Size Filter */}
-        <div className={styles.filterSection}>
-          <label className={styles.filterLabel}>Taille</label>
-          <select
-            value={selectedSize || ''}
-            onChange={(e) => handleFilterChange('size', e.target.value || undefined)}
-            className={styles.filterSelect}
+      <div
+        className={clsx(styles.sidebarFilter, {
+          [styles.mobileFilterOpen]: isMobileFilterOpen,
+          [styles.mobileFilterClosed]: !isMobileFilterOpen,
+        })}
+      >
+        {(selectedSize || selectedColor || selectedCategory) && (
+          <button 
+            className={styles.clearAllFilters} 
+            onClick={resetFilters}
           >
-            <option value="">Toutes les tailles</option>
-            {sizes.map((size) => (
-              <option key={size.id} value={size.id}>
-                {size.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            Tout effacer
+          </button>
+        )}
 
-        {/* Color Filter */}
-        <div className={styles.filterSection}>
-          <label className={styles.filterLabel}>Couleur</label>
-          <select
-            value={selectedColor || ''}
-            onChange={(e) => handleFilterChange('color', e.target.value || undefined)}
-            className={styles.filterSelect}
-          >
-            <option value="">Toutes les couleurs</option>
-            {colors.map((color) => (
-              <option key={color.id} value={color.id}>
-                {color.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Category Filter */}
-        <div className={styles.filterSection}>
-          <label className={styles.filterLabel}>Catégorie</label>
-          <select
-            value={selectedCategory || ''}
-            onChange={(e) => handleFilterChange('category', e.target.value || undefined)}
-            className={styles.filterSelect}
-          >
-            <option value="">Toutes les catégories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {renderFilterSection("Taille", sizes, "size", selectedSize)}
+        {renderFilterSection("Couleur", colors, "color", selectedColor)}
+        {renderFilterSection("Catégorie", categories, "category", selectedCategory)}
       </div>
-    </>
+    </div>
   );
 };
 
-export default SidebarFilter;
+export default React.memo(SidebarFilter);

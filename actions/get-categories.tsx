@@ -1,45 +1,31 @@
 import { Category } from "@/types";
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/categories`;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://big-ecommerce-admin.vercel.app/api/f072e5ca-1a6a-4312-81dd-23034de5f8cf';
 
-export const getCategories = async (): Promise<Category[]> => {
+const getCategories = async (): Promise<Category[]> => {
   try {
-    console.log('Fetching categories from URL:', URL);
-    const res = await fetch(URL, {
+    console.log('Fetching categories from URL:', `${BASE_URL}/categories`);
+    const res = await fetch(`${BASE_URL}/categories`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
       },
-      credentials: 'include', // This helps with CORS and cookies
-    });
-
-    // Log the full response for debugging
-    console.log('Categories Fetch Response:', {
-      status: res.status,
-      statusText: res.statusText,
-      headers: Object.fromEntries(res.headers.entries())
+      cache: 'no-store',
     });
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('Failed to fetch categories:', {
-        status: res.status,
-        statusText: res.statusText,
-        body: errorText
-      });
-      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+      console.error('Categories fetch error:', errorText);
+      return [];
     }
 
     const categories = await res.json();
-    console.log('Fetched categories:', categories);
+    console.log('Fetched categories count:', categories.length);
     return categories;
   } catch (error) {
-    console.error('Comprehensive error in getCategories:', {
-      errorName: error instanceof Error ? error.name : 'Unknown Error',
-      errorMessage: error instanceof Error ? error.message : String(error),
-      errorStack: error instanceof Error ? error.stack : 'No stack trace'
-    });
-    throw error;
+    console.error('Failed to fetch categories:', error);
+    return [];
   }
 };
 

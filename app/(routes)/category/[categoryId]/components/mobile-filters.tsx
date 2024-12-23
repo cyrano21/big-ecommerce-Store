@@ -11,11 +11,17 @@ import Filter from "./filter";
 interface MobileFiltersProps {
   sizes: Size[];
   colors: Color[];
+  onFilterChange: (filters: {
+    sizeId?: string;
+    colorId?: string;
+    categoryId?: string;
+  }) => void;
 }
 
 const MobileFilters: React.FC<MobileFiltersProps> = ({
   sizes,
-  colors
+  colors,
+  onFilterChange
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -55,18 +61,24 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
             </div>
 
             {/* Filters */}
-            <div className="p-4 space-y-8">
+            <div className="space-y-6 px-4">
               <div>
-                <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
-                  Tailles
-                </h3>
-                <Filter valueKey="sizeId" name="" data={sizes} />
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Tailles</h3>
+                <Filter 
+                  data={sizes} 
+                  name="Taille" 
+                  valueKey="sizeId" 
+                  onFilterChange={onFilterChange}
+                />
               </div>
               <div>
-                <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
-                  Couleurs
-                </h3>
-                <Filter valueKey="colorId" name="" data={colors} />
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Couleurs</h3>
+                <Filter 
+                  data={colors} 
+                  name="Couleur" 
+                  valueKey="colorId" 
+                  onFilterChange={onFilterChange}
+                />
               </div>
             </div>
 

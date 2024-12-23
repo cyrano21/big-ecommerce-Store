@@ -2,6 +2,10 @@ export interface Billboard {
   id: string;
   label: string;
   imageUrl: string;
+  description?: string;
+  storeId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Category {
@@ -19,6 +23,7 @@ export interface Product {
   isFeatured: boolean;
   size: Size;
   color: Color;
+  description?: string;
   images: Image[];
 }
 

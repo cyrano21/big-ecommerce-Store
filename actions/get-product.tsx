@@ -1,11 +1,11 @@
 import { Product } from "@/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const STORE_ID = "f072e5ca-1a6a-4312-81dd-23034de5f8cf";
+const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID;
 
 const getProduct = async (id: string): Promise<Product | null> => {
-  if (!BASE_URL) {
-    console.error('❌ NEXT_PUBLIC_API_URL is not defined');
+  if (!BASE_URL || !STORE_ID) {
+    console.error('❌ NEXT_PUBLIC_API_URL or NEXT_PUBLIC_STORE_ID is not defined');
     return null;
   }
 

@@ -1,30 +1,32 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import React from "react";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import ModalProvider from "@/providers/modal-provider";
 import ToastProvider from "../providers/toast-provider";
+import getCategories from "@/actions/get-categories";
 
-const font = Urbanist({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Store",
+  title: "E-Store",
+  description: "Your one-stop shop for amazing products",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const categories = await getCategories();
+
   return (
-    <html lang="fr">
-      <body className={font.className}>
+    <html lang="en">
+      <body className={inter.className}>
         <ModalProvider />
         <ToastProvider />
-        <Navbar />
+        <Navbar categories={categories} />
         {children}
         <Footer />
       </body>

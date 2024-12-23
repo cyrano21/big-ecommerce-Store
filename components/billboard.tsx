@@ -1,20 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import styles from "./billboard.module.css"; // Assurez-vous que le chemin soit correct
-
-// Define Billboard type directly in the file
-export interface Billboard {
-  id: string;
-  label: string;
-  imageUrl: string;
-  description?: string; // Optional description
-  storeId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import styles from "./billboard.module.css"; 
+import { Billboard as BillboardType } from "@/types";
 
 export interface BillboardProps {
-  data: Billboard | null;
+  data: BillboardType | null;
 }
 
 const Billboard: React.FC<BillboardProps> = ({ data }) => {

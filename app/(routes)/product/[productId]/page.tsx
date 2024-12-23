@@ -7,7 +7,7 @@ import ProductList from "@/components/product-list";
 import Gallery from "@/components/gallery";
 import Info from "@/components/info";
 import { Product } from "@/types";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ProductPageProps {
@@ -49,7 +49,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
         <Container>
           <div className="px-4 sm:px-6 lg:px-8">
             {/* Back Navigation */}
-            <div className="mb-4 sm:mb-8">
+            <div className="mb-4 sm:mb-8 relative">
               <Link 
                 href={`/category/${product.category.id}`} 
                 className="
@@ -57,23 +57,39 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
                   items-center 
                   text-sm 
                   sm:text-base
-                  text-gray-600 
-                  hover:text-purple-600 
-                  transition-colors 
+                  text-gray-700 
+                  hover:text-purple-700 
+                  bg-gradient-to-br 
+                  from-white 
+                  to-purple-50 
+                  hover:from-purple-50 
+                  hover:to-white 
+                  border 
+                  border-purple-100 
+                  rounded-xl 
+                  px-4 
+                  py-2.5 
+                  transition-all 
+                  duration-300 
+                  ease-in-out 
+                  shadow-md 
+                  hover:shadow-xl
                   group
+                  relative
+                  overflow-hidden
                 "
               >
-                <ArrowLeft 
+                <span className="absolute inset-0 bg-purple-100 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <ChevronLeftIcon 
                   className="
-                    w-4 
-                    h-4 
-                    sm:w-5 
-                    sm:h-5 
-                    mr-1 
-                    sm:mr-2 
-                    group-hover:translate-x-[-4px] 
-                    transition-transform
-                  " 
+                    w-5 
+                    h-5 
+                    mr-2 
+                    text-gray-600 
+                    group-hover:text-purple-700 
+                    transition-colors 
+                    duration-300
+                  "
                 />
                 Retour à {product.category.name}
               </Link>
