@@ -8,7 +8,7 @@ import ProductList from "@/components/product-list";
 export const revalidate = 0;
 
 const HomePage = async () => {
-  const storeId = ""; // Placeholder value for storeId
+  const storeId = process.env.NEXT_PUBLIC_STORE_ID;
   const products = await getProducts({ isFeatured: true, storeId });
   const billboard = await getBillboard("b3009913-e3fc-4b99-a217-d80ef1eed9f2");
 
@@ -41,7 +41,10 @@ const HomePage = async () => {
               </p>
             </div>
             <div className="bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 rounded-3xl shadow-lg p-8">
-              <ProductList items={products} />
+              <ProductList 
+                items={products} 
+                variant="homepage" 
+              />
             </div>
           </div>
         </div>

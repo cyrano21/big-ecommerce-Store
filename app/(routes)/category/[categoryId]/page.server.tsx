@@ -3,28 +3,48 @@ import getColors from "@/actions/get-colors";
 import getProducts from "@/actions/get-products";
 import getSizes from "@/actions/get-sizes";
 import CategoryPage from "./page";
+import { Product, Size, Color, Category } from "@/types";
+import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
-export default async function Page({ params }: { params: { categoryId: string } }) {
-  const storeId = "c9be10a3-5539-46cc-befc-c005d28eeb11";
+export default async function Page({
+  params,
+}: {
+  params: {
+    categoryId: string;
+  };
+}) {
+  const storeId = process.env.NEXT_PUBLIC_STORE_ID;
 
-  const products = await getProducts({
+  if (!storeId) {
+    throw new Error("NEXT_PUBLIC_STORE_ID is not defined in the environment variables");
+  }
+
+  const products: Product[] = await getProducts({
     categoryId: params.categoryId,
     storeId: storeId,
   });
 
-  const sizes = await getSizes();
-  const colors = await getColors();
-  const category = await getCategory(params.categoryId);
+
+  const sizes: Size[] = await getSizes();
+  const colors: Color[] = await getColors();
+  const category: Category | null = await getCategory(params.categoryId);
+  if (!category) {
+    // Handle the case where no category is found
+    // You might want to:
+    // - Redirect to a 404 page
+    // - Throw an error
+    return notFound(); // Next.js method to show a 404 page
+  }
 
   return (
-    <CategoryPage 
+    <CategoryPage
       params={params}
       initialProducts={products}
       initialSizes={sizes}
       initialColors={colors}
-      initialCategory={category}
+      initialCategory={category} // Now this is safe
     />
   );
 }

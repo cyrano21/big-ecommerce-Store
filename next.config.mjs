@@ -50,6 +50,20 @@ const nextConfig = {
     staticPageGenerationTimeout: 60,
     experimental: {
         staticPageGenerationTimeout: 60,
+    },
+    async redirects() {
+        return [
+            {
+                source: '/sign-in',
+                destination: '/',
+                permanent: false,
+            },
+            {
+                source: '/sign-up',
+                destination: '/',
+                permanent: false,
+            }
+        ];
     }
 };
 

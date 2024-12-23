@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 interface ProductListProps {
   title?: string;
   items: Product[];
-  variant?: 'default' | 'similar';
+  variant?: 'default' | 'similar' | 'homepage';
 }
 
 const container = {
@@ -103,9 +103,20 @@ const ProductList: React.FC<ProductListProps> = ({
         </div>
       )}
 
-      {items.length === 0 ? (
-        <NoResult />
-      ) : (
+      {variant === 'default' && (
+        <div className="hidden lg:block w-1/4 pr-8">
+          <SidebarFilter
+            sizes={sizes}
+            colors={colors}
+            categories={categories}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
+      )}
+
+      {items.length === 0 && <NoResult />}
+
+      {items.length > 0 && (
         <div className="relative">
           <motion.div
             variants={container}
@@ -124,15 +135,6 @@ const ProductList: React.FC<ProductListProps> = ({
               </motion.div>
             ))}
           </motion.div>
-
-          {variant === 'default' && (
-            <SidebarFilter 
-              sizes={sizes} 
-              colors={colors} 
-              categories={categories} 
-              onFilterChange={handleFilterChange} 
-            />
-          )}
         </div>
       )}
     </div>

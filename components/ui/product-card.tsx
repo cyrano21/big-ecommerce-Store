@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
             priority={false}
             className="aspect-square object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <div className="absolute w-full px-6 bottom-5">
+          <div className="absolute w-full px-6 bottom-5 opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             <div className="flex justify-center space-x-4">
               <IconButton 
                 onClick={onPreview} 

@@ -8,8 +8,7 @@ const getCategories = async (): Promise<Category[]> => {
     const res = await fetch(`${BASE_URL}/categories`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
+        'Content-Type': 'application/json'
       },
       cache: 'no-store',
     });

@@ -15,13 +15,15 @@ interface SidebarFilterProps {
     colorId?: string;
     categoryId?: string;
   }) => void;
+  className?: string;
 }
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
   sizes,
   colors,
   categories,
-  onFilterChange
+  onFilterChange,
+  className,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
@@ -114,7 +116,10 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
   );
 
   return (
-    <div ref={filterContainerRef} className={styles.filterContainer}>
+    <div 
+      ref={filterContainerRef} 
+      className={clsx(styles.filterContainer, className)}
+    >
       <button
         onClick={toggleMobileFilter}
         className={styles.mobileFilterButton}

@@ -32,7 +32,7 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
     <>
       <button
         onClick={onOpen}
-        className="flex items-center gap-x-2 lg:hidden px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+        className="flex items-center gap-x-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
       >
         <Plus size={20} />
         Filtres

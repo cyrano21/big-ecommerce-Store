@@ -48,11 +48,11 @@
   }
 
   .sidebarSection {
-    display: none;
+    display: none !important; /* Forcer la non-visibilité */
   }
 
   .mobileFiltersSection {
-    display: block;
+    display: block !important; /* Forcer l'affichage */
   }
 }
 
