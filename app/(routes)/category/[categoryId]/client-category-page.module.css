@@ -65,6 +65,7 @@
   .categoryPageLayout {
     display: flex;
     align-items: flex-start;
+    gap: 20px;
   }
 
   .mobileFiltersSection {
@@ -74,7 +75,7 @@
   .sidebarSection {
     display: block !important;
     width: 250px;
-    margin-right: 20px;
+    flex-shrink: 0;
   }
 
   .productsSection {

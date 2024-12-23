@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@/components/ui/container";
 import Billboard from "@/components/billboard";
 import NoResult from "@/components/ui/no-result";
@@ -27,6 +27,11 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
   initialColors,
   initialCategory,
 }) => {
+  console.log('Initial Products:', initialProducts);
+  console.log('Initial Sizes:', initialSizes);
+  console.log('Initial Colors:', initialColors);
+  console.log('Initial Category:', initialCategory);
+
   const [products, setProducts] = useState(initialProducts);
   const [sizes] = useState(initialSizes);
   const [colors] = useState(initialColors);
@@ -37,16 +42,39 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
     colorId?: string;
     categoryId?: string;
   }) => {
+    console.log('Handling filter change:', filters);
+    
     const storeId = "c9be10a3-5539-46cc-befc-c005d28eeb11";
-    const filteredResults = await getProducts({
-      categoryId: params.categoryId,
-      sizeId: filters.sizeId,
-      colorId: filters.colorId,
-      storeId: storeId,
-    });
+    console.log('Store ID:', storeId);
+    console.log('Category ID:', params.categoryId);
 
-    setProducts(filteredResults);
+    try {
+      const filteredResults = await getProducts({
+        categoryId: params.categoryId,
+        sizeId: filters.sizeId,
+        colorId: filters.colorId,
+        storeId: storeId,
+      });
+
+      console.log('Filtered results:', filteredResults);
+      
+      // Si aucun produit n'est trouvé, restaurer les produits initiaux
+      if (filteredResults.length === 0) {
+        console.warn('No products found with current filters, restoring initial products');
+        setProducts(initialProducts);
+      } else {
+        setProducts(filteredResults);
+      }
+    } catch (error) {
+      console.error('Error filtering products:', error);
+      // En cas d'erreur, restaurer les produits initiaux
+      setProducts(initialProducts);
+    }
   };
+
+  useEffect(() => {
+    console.log('Current products state:', products);
+  }, [products]);
 
   const billboardData = category.billboard ? {
     id: category.billboard.id || '',

@@ -38,7 +38,9 @@ const getProducts = async (query: Query): Promise<Product[]> => {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN || ''}`,
+        'Access-Control-Allow-Origin': '*',
       },
+      mode: 'cors',
       cache: 'no-store',
     });
 

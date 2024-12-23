@@ -47,9 +47,17 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
   }, []);
 
   const handleFilterChange = useCallback((type: 'size' | 'color' | 'category', value?: string) => {
+    console.log('Filter changed:', { type, value });
+    
     let newSizeId = type === 'size' ? value : selectedSize;
     let newColorId = type === 'color' ? value : selectedColor;
     let newCategoryId = type === 'category' ? value : selectedCategory;
+
+    console.log('New filter state:', {
+      sizeId: newSizeId,
+      colorId: newColorId,
+      categoryId: newCategoryId
+    });
 
     // Update local state
     setSelectedSize(newSizeId);
@@ -65,9 +73,12 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
   }, [selectedSize, selectedColor, selectedCategory, onFilterChange]);
 
   const resetFilters = useCallback(() => {
+    console.log('Resetting all filters');
     setSelectedSize(undefined);
     setSelectedColor(undefined);
     setSelectedCategory(undefined);
+    
+    // Notifier le parent de réinitialiser les filtres
     onFilterChange({});
   }, [onFilterChange]);
 
