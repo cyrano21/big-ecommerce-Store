@@ -30,7 +30,7 @@ const Billboard: React.FC<BillboardProps> = ({ data }) => {
   const label = data.label || 'Billboard';
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 rounded-xl overflow-hidden">
+    <div className="p-4 sm:p-6 lg:p-8 rounded-xl overflow-hidden w-full">
       <div 
         className="
           relative 

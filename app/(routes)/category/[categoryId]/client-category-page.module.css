@@ -57,10 +57,7 @@
 }
 
 @media (min-width: 1024px) {
-  .billboardContainer {
-    width: calc(100% - 16rem);
-    margin-left: auto;
-  }
+ 
 
   .categoryPageLayout {
     display: flex;
