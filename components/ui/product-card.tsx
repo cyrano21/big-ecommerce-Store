@@ -75,6 +75,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
           <h3 className="font-bold text-sm group-hover:text-purple-600 transition-colors duration-300">
             {data.name}
           </h3>
+          <div className="flex items-center mt-1 space-x-2">
+            <span className="text-xs font-medium text-gray-500">Taille</span>
+            <span className="px-2 py-0.5 text-[10px] font-semibold bg-purple-100 text-purple-700 rounded-full">
+              {data.size.name}
+            </span>
+          </div>
         </div>
         <div className="pt-1 flex items-center justify-between">
           <Currency value={data?.price} className="text-sm font-bold text-gray-900" />
