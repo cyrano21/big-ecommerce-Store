@@ -145,7 +145,7 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
           <div className={styles.productsSection}>
             {selectedSizeId && products.length === 0 && (
               <div className="w-full bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-                Aucun produit disponible pour la taille &#34;{selectedSizeName}&#34;
+              Aucun produit disponible pour la taille &#34;{selectedSizeName}&#34;
               </div>
             )}
 
