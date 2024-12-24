@@ -65,17 +65,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
   };
 
   return (
-    <div
+    <div 
       onClick={handleClick}
-      className="group cursor-pointer overflow-hidden rounded-2xl bg-white hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 w-full h-full flex flex-col"
+      className="bg-white group cursor-pointer rounded-xl hover:shadow-lg transition duration-300"
     >
-      <div className="aspect-square relative bg-gray-100 rounded-xl">
-        <Image
-          src={data.images?.[0]?.url}
-          alt={data.name}
-          fill
+      {/* Image container */}
+      <div className="aspect-square relative overflow-hidden p-4">
+        <Image 
+          src={data.images?.[0]?.url} 
+          alt={data.name} 
+          fill 
+          className="object-contain hover:scale-105 transition mt-4"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="aspect-square object-cover rounded-xl"
           priority={false}
         />
         <div className="opacity-0 group-hover:opacity-100 transition absolute w-full px-6 bottom-5">
@@ -91,7 +92,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="relative p-3 bg-white flex-grow flex flex-col justify-between">
+
+      {/* Content */}
+      <div className="p-4 space-y-3">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-xs font-medium text-purple-600 truncate max-w-[70%]">{data.category?.name}</p>
@@ -109,7 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
               </div>
             </div>
             <div className="flex items-center justify-between mt-auto">
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-orange-600">
                 <Currency value={data.price} />
               </p>
             </div>
