@@ -49,7 +49,6 @@ const nextConfig = {
     // Disable revalidation for static assets
     staticPageGenerationTimeout: 60,
     experimental: {
-        staticPageGenerationTimeout: 60,
     },
     async redirects() {
         return [

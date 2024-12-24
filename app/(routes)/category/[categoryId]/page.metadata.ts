@@ -9,6 +9,13 @@ export async function generateMetadata({
   try {
     const category = await getCategory(params.categoryId);
     
+    if (!category) {
+      return {
+        title: 'Catégorie non trouvée',
+        description: 'La catégorie demandée est introuvable',
+      };
+    }
+
     return {
       title: category.name,
       description: `Découvrez notre sélection de produits ${category.name.toLowerCase()} soigneusement choisis pour vous`,

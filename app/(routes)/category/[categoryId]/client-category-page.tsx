@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Product, Size, Color, Category } from "@/types";
 import Container from "@/components/ui/container";
 import Billboard from "@/components/billboard";
 import NoResult from "@/components/ui/no-result";
@@ -10,34 +11,36 @@ import SidebarFilter from "@/components/ui/sidebar-filter";
 import getProducts from "@/actions/get-products";
 import styles from './client-category-page.module.css';
 
-interface ClientCategoryPageProps {
+interface Props {
   params: {
     categoryId: string;
   };
-  initialProducts: any[];
-  initialSizes: any[];
-  initialColors: any[];
-  initialCategory: any;
+  searchParams?: { [key: string]: string | string[] | undefined };
+  initialProducts: Product[];
+  initialSizes: Size[];
+  initialColors: Color[];
+  initialCategory: Category;
 }
 
-const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
+const ClientCategoryPage = ({
   params,
+  searchParams,
   initialProducts,
   initialSizes,
   initialColors,
   initialCategory,
-}) => {
+}: Props) => {
   console.log('Initial Products:', initialProducts);
   console.log('Initial Sizes:', initialSizes);
   console.log('Initial Colors:', initialColors);
   console.log('Initial Category:', initialCategory);
 
-  const [products, setProducts] = useState(initialProducts);
-  const [sizes] = useState(initialSizes);
-  const [colors] = useState(initialColors);
-  const [category] = useState(initialCategory);
-  const [selectedSizeName, setSelectedSizeName] = useState<string | null>(null);
-  const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
+  const [products, setProducts] = React.useState(initialProducts);
+  const [sizes] = React.useState(initialSizes);
+  const [colors] = React.useState(initialColors);
+  const [category] = React.useState(initialCategory);
+  const [selectedSizeName, setSelectedSizeName] = React.useState<string | null>(null);
+  const [selectedSizeId, setSelectedSizeId] = React.useState<string | null>(null);
 
   const handleFilterChange = async (filters: {
     sizeId?: string;
@@ -72,7 +75,7 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
       
       // Trouver le nom de la taille correspondant à l'ID
       const selectedSizeName = filters.sizeId 
-        ? sizes.find(size => size.id === filters.sizeId)?.name 
+        ? sizes.find(size => size.id === filters.sizeId)?.name ?? null
         : null;
 
       // Mettre à jour l'état
@@ -88,7 +91,7 @@ const ClientCategoryPage: React.FC<ClientCategoryPageProps> = ({
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('Current products state:', products);
   }, [products]);
 
