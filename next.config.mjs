@@ -8,6 +8,18 @@ const nextConfig = {
                 port: '',
                 pathname: '/dwens2ze5/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'big-ecommerce-admin.vercel.app',
+                port: '',
+                pathname: '/api/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '3001',
+                pathname: '/api/**',
+            }
         ],
         // Remove legacy image props
         formats: ['image/avif', 'image/webp'],

@@ -42,14 +42,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
       <div className="aspect-square relative flex-shrink-0">
         <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-500"></div>
         <div className="relative aspect-square rounded-t-xl overflow-hidden">
-          <Image
-            src={data?.images?.[0]?.url}
-            alt={data.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={false}
-            className="aspect-square object-cover transition-transform duration-700 group-hover:scale-110"
-          />
+          <div className="relative aspect-square rounded-t-xl overflow-hidden flex items-center justify-center bg-gray-100">
+            <Image
+              src={data?.images?.[0]?.url || '/placeholder-product.jpg'}
+              alt={data.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={false}
+              className="object-contain object-center"
+              onError={(e) => {
+                const imgElement = e.target as HTMLImageElement;
+                imgElement.src = '/placeholder-product.jpg';
+              }}
+            />
+          </div>
           <div className="absolute w-full px-6 bottom-5 opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             <div className="flex justify-center space-x-4">
               <IconButton 

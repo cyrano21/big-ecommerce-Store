@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Tab } from '@headlessui/react';
+import classNames from 'classnames/dedupe'; // changed to dedupe import
 
 import { Image as ImageType } from '@/types';
 
@@ -16,103 +17,51 @@ const Gallery: React.FC<GalleryProps> = ({ images = [] }) => {
   return (
     <div className="flex flex-col px-2">
       <div className="mx-auto mt-6 w-full max-w-2xl sm:block lg:max-w-none">
-        <Tab.Group 
-          as="div" 
-          className="flex flex-col"
-          selectedIndex={selectedImageIndex}
-          onChange={setSelectedImageIndex}
-        >
-          <Tab.Panels className="aspect-square w-full">
-            {images.map((image) => (
-              <Tab.Panel key={image.id}>
-                <div className="aspect-square relative w-full sm:rounded-lg overflow-hidden">
-                  <Image
-                    src={image.url}
-                    alt="Product Image"
-                    fill
-                    className="object-cover object-center"
-                  />
-                </div>
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-
-          <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-            <Tab.List className="grid grid-cols-4 gap-6 my-2">
+        <Tab.Group as="div" className="flex flex-col-reverse">
+          <div className="mx-auto mt-6 mb-6 w-full max-w-2xl sm:block lg:max-w-none">
+            <Tab.List className="grid grid-cols-4 gap-6">
               {images.map((image, index) => (
                 <Tab
                   key={image.id}
-                  className={`
-                    relative 
-                    flex 
-                    aspect-square 
-                    cursor-pointer 
-                    items-center 
-                    justify-center 
-                    rounded-md 
-                    bg-white 
-                    p-2 
-                    focus:outline-none 
-                    data-[selected=true]:ring-2 
-                    data-[selected=true]:ring-purple-500
-                  `}
+                  onMouseEnter={() => setSelectedImageIndex(index)}
+                  className={({ selected }) => classNames(
+                    'relative flex aspect-square items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none data-[selected=true]:ring-2 data-[selected=true]:ring-indigo-500',
+                    selected ? 'ring-2 ring-indigo-500' : ''
+                  )}
                 >
                   <span className="absolute inset-0 overflow-hidden rounded-md">
                     <Image
                       src={image.url}
                       alt="Product Thumbnail"
                       fill
-                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain object-center"
                     />
                   </span>
                   <span
-                    className={`
-                      absolute 
-                      inset-0 
-                      rounded-md 
-                      ring-2 
-                      ring-offset-2 
-                      pointer-events-none 
-                      ${
-                        selectedImageIndex === index
-                          ? 'ring-purple-500'
-                          : 'ring-transparent'
-                      }
-                    `}
+                    className={classNames(
+                      'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2',
+                      selectedImageIndex === index ? 'ring-indigo-500' : 'ring-transparent'
+                    )}
                     aria-hidden="true"
                   />
                 </Tab>
               ))}
             </Tab.List>
           </div>
-
-          <div className="block sm:hidden px-4 mt-2 mb-2">
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((image, index) => (
-                <div 
-                  key={image.id}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`
-                    relative 
-                    aspect-square 
-                    cursor-pointer 
-                    rounded-md 
-                    overflow-hidden 
-                    ${selectedImageIndex === index 
-                      ? 'ring-2 ring-purple-500 ring-offset-2' 
-                      : 'hover:opacity-75'}
-                  `}
-                >
-                  <Image
-                    src={image.url}
-                    alt="Product Image"
-                    fill
-                    className="object-cover object-center"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <Tab.Panels className="aspect-square w-full">
+            <Tab.Panel key={images[selectedImageIndex]?.id}>
+              <div className="aspect-square relative w-full sm:rounded-lg overflow-hidden flex items-center justify-center bg-gray-100">
+                <Image
+                  src={images[selectedImageIndex]?.url || '/placeholder-product.jpg'}
+                  alt="Product Image"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-contain object-center"
+                />
+              </div>
+            </Tab.Panel>
+          </Tab.Panels>
         </Tab.Group>
       </div>
     </div>
