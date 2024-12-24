@@ -40,7 +40,7 @@ const HomePage = async () => {
                 Les articles les plus appréciés par nos clients
               </p>
             </div>
-            <div className="bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 rounded-3xl shadow-lg p-8">
+            <div className="bg-gradient-to-br from-white via-purple-50 to-fuchsia-50 rounded-3xl shadow-lg p-2">
               <ProductList 
                 items={products} 
                 variant="homepage" 
