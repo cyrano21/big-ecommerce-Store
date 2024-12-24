@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { Product, Size, Color, Category } from "@/types";
 import NoResult from "@/components/ui/no-result";
 import ProductCard from "@/components/ui/product-card";
 import ProductFilter from "@/components/ui/product-filter";
@@ -11,12 +10,7 @@ import getSizes from "@/actions/get-sizes";
 import getColors from "@/actions/get-colors";
 import getCategories from "@/actions/get-categories";
 import { motion } from "framer-motion";
-
-interface ProductListProps {
-  title?: string;
-  items: Product[];
-  variant?: 'default' | 'similar' | 'homepage';
-}
+import { Product, Size, Color, Category, ProductVariation } from "@/types/index";
 
 const container = {
   hidden: { opacity: 0 },
@@ -42,6 +36,12 @@ const itemVariant = {
     }
   }
 };
+
+interface ProductListProps {
+  title?: string;
+  items: Product[];
+  variant?: 'default' | 'similar' | 'homepage';
+}
 
 const ProductList: React.FC<ProductListProps> = ({
   title,
@@ -90,6 +90,26 @@ const ProductList: React.FC<ProductListProps> = ({
     ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-6xl mx-auto"
     : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4";
 
+  // Filtrer les produits disponibles
+  const availableItems = items.filter(item => {
+    // Si le produit n'a pas de variations, on le considère comme disponible
+    if (!item.variations || item.variations.length === 0) {
+      console.log('Product without variations:', item);
+      return true;
+    }
+    
+    // Si le produit a des variations, vérifier si au moins une variation a du stock
+    const hasAvailableVariation = item.variations.some(
+      (variation: ProductVariation) => variation && variation.stock > 0
+    );
+    
+    if (!hasAvailableVariation) {
+      console.log('Product with no available variations:', item);
+    }
+    
+    return hasAvailableVariation;
+  });
+
   return (
     <div className={`px-2 sm:px-6 lg:px-8  ${variant === 'similar' ? 'py-4' : ''}`}>
       {title && variant === 'default' && (
@@ -116,9 +136,9 @@ const ProductList: React.FC<ProductListProps> = ({
         </div>
       )}
 
-      {items.length === 0 && <NoResult />}
+      {availableItems.length === 0 && <NoResult />}
 
-      {items.length > 0 && (
+      {availableItems.length > 0 && (
         <div className="relative">
           <motion.div
             variants={container}
@@ -126,7 +146,7 @@ const ProductList: React.FC<ProductListProps> = ({
             animate="show"
             className={gridClasses}
           >
-            {items.map((item) => (
+            {availableItems.map((item) => (
               <motion.div 
                 key={item.id} 
                 variants={itemVariant}

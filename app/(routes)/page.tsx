@@ -1,16 +1,30 @@
 import React from "react";
 import Container from "@/components/ui/container";
-import getBillboard from "../../actions/get-billboard";
-import Billboard from "@/components/billboard";
+import getBillboards from "../../actions/get-billboards";
 import getProducts from "../../actions/get-products";
+import Billboard from "@/components/billboard";
 import ProductList from "@/components/product-list";
 
 export const revalidate = 0;
 
-const HomePage = async () => {
+export default async function HomePage() {
   const storeId = process.env.NEXT_PUBLIC_STORE_ID;
-  const products = await getProducts({ isFeatured: true, storeId });
-  const billboard = await getBillboard("b3009913-e3fc-4b99-a217-d80ef1eed9f2");
+  
+  if (!storeId) {
+    return <div>Store ID is not configured</div>;
+  }
+
+  // Récupérer le premier billboard de la boutique
+  const billboards = await getBillboards({ 
+    storeId, 
+    limit: 1 
+  });
+  
+  const billboard = billboards.length > 0 ? billboards[0] : null;
+  const products = await getProducts({ 
+    isFeatured: true, 
+    storeId 
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50">
@@ -51,5 +65,4 @@ const HomePage = async () => {
       </Container>
     </div>
   );
-};
-export default HomePage;
+}

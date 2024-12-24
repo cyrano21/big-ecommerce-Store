@@ -16,15 +16,16 @@ export interface Category {
 
 export interface Product {
   id: string;
-  category: Category;
-  storeId: string; 
   name: string;
-  price: string;
-  isFeatured: boolean;
-  size: Size;
-  color: Color;
   description?: string;
+  price: string | number;
+  isFeatured: boolean;
+  isArchived: boolean;
+  category: Category;
   images: Image[];
+  variations: ProductVariation[];
+  storeId: string;
+  selectedVariation?: ProductVariation;
 }
 
 export interface Image {
@@ -42,4 +43,19 @@ export interface Color {
   id: string;
   name: string;
   value: string;
+}
+
+export interface ProductVariation {
+  id: string;
+  productId: string;
+  colorId: string;
+  sizeId: string;
+  stock: number;
+  color: Color;
+  size: Size;
+}
+
+export interface CartItem extends Product {
+  selectedVariation: ProductVariation;
+  quantity: number;
 }

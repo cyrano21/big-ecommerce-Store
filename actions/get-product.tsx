@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { Product, ProductVariation } from "@/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID;
@@ -41,7 +41,13 @@ const getProduct = async (id: string): Promise<Product | null> => {
     console.log('✅ Parsed Product Data:', data);
     console.groupEnd();
 
-    return data;
+    // Vérifier et formater les variations
+    const productWithVariations: Product = {
+      ...data,
+      variations: data.variations || []
+    };
+
+    return productWithVariations;
   } catch (error) {
     console.error('🚨 Product Fetch Error:', error);
     console.groupEnd();

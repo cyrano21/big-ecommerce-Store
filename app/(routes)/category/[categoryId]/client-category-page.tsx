@@ -56,19 +56,23 @@ const ClientCategoryPage = ({
     try {
       // Filtrage local strict basé sur la taille sélectionnée
       const localFilteredResults = initialProducts.filter(product => {
-        const sizeMatch = !filters.sizeId || product.size.id === filters.sizeId;
-        const categoryMatch = !params.categoryId || product.category?.id === params.categoryId;
+        // Vérifier si au moins une variation correspond aux filtres
+        const matchingVariations = product.variations.filter(variation => {
+          const sizeMatch = !filters.sizeId || variation.size.id === filters.sizeId;
+          const categoryMatch = !params.categoryId || product.category?.id === params.categoryId;
+          
+          return sizeMatch && categoryMatch;
+        });
         
         console.log(`Product ${product.id} filtering:`, {
-          productSizeId: product.size.id,
+          productVariations: product.variations.map(v => v.size.id),
           filterSizeId: filters.sizeId,
           productCategoryId: product.category?.id,
           filterCategoryId: params.categoryId,
-          sizeMatch,
-          categoryMatch
+          matchingVariationsCount: matchingVariations.length
         });
 
-        return sizeMatch && categoryMatch;
+        return matchingVariations.length > 0;
       });
 
       console.log('Locally filtered results:', localFilteredResults);

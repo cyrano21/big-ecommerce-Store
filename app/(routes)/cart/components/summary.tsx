@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import toast from "react-hot-toast";
-import useCart from "@/hooks/use-cart";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+
 import Button from "@/components/ui/Button";
 import Currency from "@/components/ui/currency";
+import useCart from "@/hooks/use-cart";
+import { toast } from "react-hot-toast";
 
 const Summary = () => {
   const searchPrams = useSearchParams();
@@ -62,13 +63,13 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
 
-        <button
+        <Button
           onClick={onCheckout}
           disabled={items.length === 0}
           className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-full font-medium transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           Commander
-        </button>
+        </Button>
 
         <p className="text-sm text-gray-500 text-center mt-4">
           Paiement sécurisé via Stripe

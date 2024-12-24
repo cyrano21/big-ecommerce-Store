@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Size, Color, Category } from '@/types';
+import { Product, Category, Size, Color } from "@/types";
 import { ChevronDown } from 'lucide-react';
 
 interface ProductFilterProps {

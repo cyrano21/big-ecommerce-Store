@@ -31,16 +31,25 @@ export interface Image {
   url: string;
 }
 
+export interface ProductVariation {
+  id: string;
+  productId: string;
+  colorId: string;
+  color: Color;
+  sizeId: string;
+  size: Size;
+  stock: number;
+}
+
 export interface Product {
   id: string;
   name: string;
   description?: string; 
-  price: number;
+  price: string | number;
   isFeatured: boolean;
   isArchived: boolean;
-  color: Color;
-  size: Size;
   category: Category;
   images: Image[];
+  variations: ProductVariation[];
   storeId: string;
 }

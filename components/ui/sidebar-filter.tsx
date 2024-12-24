@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Filter, X, CheckCircle2 } from "lucide-react";
 import clsx from "clsx";
-import { Size, Color, Category } from '@/types';
+import { Product, Category, Size, Color } from "@/types";
 import styles from './sidebar-filter.module.css';
 
 interface SidebarFilterProps {

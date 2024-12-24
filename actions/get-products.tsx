@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { Product, ProductVariation } from "@/types";
 import queryString from "query-string";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://big-ecommerce-admin.vercel.app/api/f072e5ca-1a6a-4312-81dd-23034de5f8cf';
@@ -25,13 +25,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     });
 
     console.log('Fetching products URL:', url);
-    console.log('Query parameters:', {
-      categoryId: query.categoryId,
-      colorId: query.colorId,
-      sizeId: query.sizeId,
-      storeId: query.storeId,
-      isFeatured: query.isFeatured,
-    });
+    console.log('Query parameters:', query);
 
     const res = await fetch(url, {
       method: 'GET',
@@ -51,8 +45,25 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     }
 
     const products = await res.json();
-    console.log('Fetched products count:', products.length);
-    return products;
+    
+    // Log pour le débogage
+    console.log('Raw products response:', products);
+    
+    // Vérifier que chaque produit a les propriétés requises
+    const validatedProducts = products.map((product: any) => ({
+      ...product,
+      variations: product.variations?.map((variation: any) => ({
+        ...variation,
+        color: variation.color || null,
+        size: variation.size || null,
+        stock: variation.stock || 0
+      })) || [],
+      category: product.category || null,
+      images: product.images || []
+    }));
+
+    console.log('Validated products:', validatedProducts);
+    return validatedProducts;
   } catch (error) {
     console.error('Failed to fetch products:', error);
     return [];
