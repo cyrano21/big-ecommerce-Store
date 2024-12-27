@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Gallery from "@/components/gallery";
 import Info from "@/components/info";
-import { Product } from '@/types';
+import { Product } from "@/types";
 
 interface ProductDetailsProps {
   product: Product;
@@ -17,19 +17,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-8 min-h-[calc(100vh-80px)]">
           <div className="lg:min-h-[calc(100vh-80px)] lg:sticky lg:top-20">
-            <Gallery 
+            <Gallery
               images={product.images}
               selectedIndex={selectedImageIndex}
-              onSelect={setSelectedImageIndex}
-              variations={product.variations}
+              onImageSelect={setSelectedImageIndex}
             />
           </div>
 
           <div className="lg:min-h-[calc(100vh-80px)] lg:py-8">
-            <Info 
-              data={product} 
-              onImageSelect={setSelectedImageIndex}
-            />
+            <Info data={product} onImageSelect={setSelectedImageIndex} />
           </div>
         </div>
       </div>
