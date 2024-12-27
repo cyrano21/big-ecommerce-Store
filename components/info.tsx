@@ -7,12 +7,15 @@ import { Heart, ShoppingCart, Star } from "lucide-react";
 import useCart from "@/hooks/use-cart";
 import { useState } from "react";
 import cn from "classnames";
+import Image from 'next/image';
+import "./info.css";
 
 interface InfoProps {
   data: Product;
+  onImageSelect: (index: number) => void;
 }
 
-const Info: React.FC<InfoProps> = ({ data }) => {
+const Info: React.FC<InfoProps> = ({ data, onImageSelect }) => {
   const cart = useCart();
   const [selectedVariation, setSelectedVariation] = useState<ProductVariation | null>(
     data.variations && data.variations.length > 0 ? data.variations[0] : null
@@ -25,112 +28,153 @@ const Info: React.FC<InfoProps> = ({ data }) => {
     }
   };
 
+  // Regrouper les variations par couleur et associer les images
+  console.log("Images disponibles:", data.images);
+  console.log("Variations disponibles:", data.variations);
+
+  const colorVariations = data.variations.reduce((acc, variation) => {
+    if (!acc[variation.colorId]) {
+      // Trouver les images associées à cette variation par le variationId
+      const variationImages = data.images.filter(img => img.variationId === variation.id);
+      console.log(`Images pour la variation ${variation.id}:`, variationImages);
+      
+      const image = variationImages.length > 0 ? variationImages[0] : null;
+      console.log(`Image sélectionnée pour la variation ${variation.id}:`, image);
+      
+      if (image) {
+        acc[variation.colorId] = {
+          colorId: variation.colorId,
+          color: variation.color,
+          image: image,
+          imageIndex: data.images.findIndex(img => img.id === image.id)
+        };
+      }
+    }
+    return acc;
+  }, {} as Record<string, { colorId: string; color: any; image?: any; imageIndex: number }>);
+
+  console.log("Résultat final colorVariations:", colorVariations);
+
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="info-container">
       {/* En-tête avec titre et favoris */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{data.name}</h1>
-          <button 
-            onClick={() => setIsFavorite(!isFavorite)}
-            className="p-2 hover:scale-110 transition"
-          >
-            <Heart 
-              size={24} 
-              className={cn(
-                "transition-colors",
-                isFavorite ? "fill-red-500 text-red-500" : "text-gray-500"
-              )} 
-            />
-          </button>
+      <div className="info-header">
+        <div className="header-top">
+          <h1 className="product-title">{data.name}</h1>
+    <button 
+  type="button"
+  onClick={() => setIsFavorite(!isFavorite)}
+  className="favorite-button"
+  title="Add to favorites"
+>
+  <Heart 
+    size={24} 
+    className={cn(
+      "favorite-icon",
+      isFavorite ? "active" : "inactive"
+    )} 
+  />
+</button>
         </div>
 
-        {/* Étoiles et avis */}
-        <div className="flex items-center gap-x-2">
-          <div className="flex">
+        <div className="rating-container">
+          <div className="stars-container">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
                 size={16}
-                className="text-yellow-400 fill-yellow-400"
+                className="star-icon"
               />
             ))}
           </div>
-          <span className="text-sm text-gray-500">(125 avis)</span>
+          <span className="review-count">({125} avis)</span>
         </div>
 
-        {/* Prix */}
-        <div className="flex items-center">
-          <p className="text-xl sm:text-2xl font-medium text-orange-600">
-            <Currency value={data?.price} />
-          </p>
+        <div className="price">
+          <Currency value={data?.price} />
         </div>
       </div>
 
-      {/* Description */}
-      <div className="space-y-4">
+      {/* Description et avis */}
+      <div className="description-section">
         <div>
-          <h3 className="text-sm font-medium mb-2">Description:</h3>
-          <p className="text-sm text-gray-600 leading-relaxed">{data.description}</p>
+          <h3 className="section-title">Description:</h3>
+          <p className="description-text">{data.description}</p>
         </div>
       </div>
 
-      {/* Variations */}
-      {data.variations && data.variations.length > 0 && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
-            {data.variations.map((variation) => (
+      {/* Couleurs disponibles */}
+      <div className="colors-section">
+        <h3 className="section-title">Couleurs disponibles:</h3>
+        <div className="colors-grid">
+          {Object.values(colorVariations).map(({ colorId, color, image, imageIndex }) => {
+            console.log("Rendering color variation:", { colorId, color, image, imageIndex });
+            return (
               <div 
-                key={variation.id} 
-                onClick={() => setSelectedVariation(variation)}
-                className="relative p-3 bg-white flex-grow flex flex-col justify-between border rounded-xl cursor-pointer"
-              >
-                {/* Taille */}
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Taille:</p>
-                  <div className={cn(
-                    "bg-black text-white px-3 py-1 rounded-md text-center",
-                    selectedVariation?.id === variation.id && "ring-2 ring-white"
-                  )}>
-                    {variation.size?.name}
-                  </div>
-                </div>
-
-                {/* Couleur */}
-                {variation.color && (
-                  <div className="space-y-2 mt-3">
-                    <p className="text-sm font-medium">Couleur:</p>
-                    <div className="flex items-center gap-x-2">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                        <div
-                          className="w-3 h-3 sm:w-4 sm:h-4 rounded-full"
-                          style={{ backgroundColor: variation.color.value }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                key={colorId}
+                className={cn(
+                  "color-item",
+                  selectedVariation?.colorId === colorId ? "selected" : "unselected"
                 )}
-
-                {/* Stock */}
-                <div className="mt-3">
-                  <span className={cn(
-                    "text-xs font-medium",
-                    variation.stock > 0 ? "text-green-500" : "text-red-500"
-                  )}>
-                    {variation.stock > 0 ? "En stock" : "Rupture de stock"}
-                  </span>
-                </div>
+              >
+                {image?.url && (
+                  <Image
+                    onClick={() => {
+                      const variation = data.variations.find(v => v.colorId === colorId);
+                      if (variation) {
+                        setSelectedVariation(variation);
+                        if (imageIndex !== -1) {
+                          onImageSelect(imageIndex);
+                        }
+                      }
+                    }}
+                    src={image.url}
+                    alt={`Couleur ${color?.name || ''}`}
+                 
+                    fill
+                    style={{ objectFit: "contain" }}
+                    className="color-image"
+                  />
+                )}
               </div>
-            ))}
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Tailles */}
+      {data.variations && data.variations.length > 0 && (
+        <div className="sizes-section">
+          <h3 className="section-title">Tailles:</h3>
+          <div className="sizes-grid">
+            {data.variations
+              .filter(v => v.colorId === selectedVariation?.colorId)
+              .map((variation) => (
+                <button 
+                  key={variation.id} 
+                  onClick={() => setSelectedVariation(variation)}
+                  className={cn(
+                    "size-button",
+                    selectedVariation?.id === variation.id && "selected",
+                    variation.stock === 0 && "out-of-stock"
+                  )}
+                  disabled={variation.stock === 0}
+                >
+                  <span>{variation.size?.name}</span>
+                  {variation.stock === 0 && (
+                    <span className="out-of-stock-text">(Rupture)</span>
+                  )}
+                </button>
+              ))}
           </div>
         </div>
       )}
 
-      {/* Bouton d'action */}
-      <div className="flex items-center gap-x-3">
+      {/* Bouton d'ajout au panier */}
+      <div className="add-to-cart-container">
         <Button 
           onClick={onAddToCart} 
-          className="flex items-center gap-x-2"
+          className="add-to-cart-button"
           disabled={!selectedVariation || selectedVariation.stock === 0}
         >
           Ajouter au panier

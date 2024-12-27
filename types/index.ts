@@ -29,6 +29,7 @@ export interface Category {
 export interface Image {
   id: string;
   url: string;
+  color?: Color;
 }
 
 export interface ProductVariation {

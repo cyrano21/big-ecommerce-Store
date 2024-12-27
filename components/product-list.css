@@ -1,0 +1,122 @@
+.product-list-container {
+  padding: 0.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .product-list-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-list-container {
+    padding: 0 2rem;
+  }
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.list-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.products-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.products-grid.default {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.products-grid.similar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 90rem; /* Élargi de 72rem (max-w-6xl) à 90rem */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0; /* Suppression du padding pour maximiser l'espace */
+}
+
+.products-grid.homepage {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 640px) {
+  .products-grid.similar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .products-grid.similar {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; /* Plus grand espacement entre les éléments */
+  }
+}
+
+@media (min-width: 1024px) {
+  .products-grid.similar {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.product-card-wrapper {
+  width: 100%;
+  transform: scale(1);
+  transition: all 0.3s;
+  border-radius: 0.75rem;
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 100%;
+}
+
+.product-card-wrapper:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Animation styles */
+.product-list-container {
+  opacity: 0;
+}
+
+.product-list-container.show {
+  opacity: 1;
+}
+
+.product-card-wrapper {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+}
+
+.product-card-wrapper.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.3s ease-out,
+              transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

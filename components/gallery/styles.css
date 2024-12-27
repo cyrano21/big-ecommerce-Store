@@ -1,0 +1,154 @@
+.gallery {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  position: relative;
+}
+
+.gallery-container {
+display: flex;
+  flex-direction:row;
+  gap: 1rem;
+}
+
+/* Thumbnails sidebar */
+.thumbnails-sidebar {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  width: 5rem;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .gallery-container {
+    gap: 1rem;
+  }
+
+  .thumbnails-sidebar {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100px;
+  }
+}
+
+@media (max-width: 770px) {
+  .thumbnails-sidebar {
+   display:none
+  }
+
+  .mobile-thumbnails {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 0.5rem;
+    height: 80px;
+  }
+}
+
+.thumbnail-button {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: rgb(243 244 246);
+  transition: opacity 0.2s;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  padding: 2px;
+}
+
+.thumbnail-button:hover {
+  opacity: 0.75;
+  opacity: 0.8;
+}
+
+.thumbnail-button.selected {
+  ring: 2px solid black;
+  border-color: #000;
+}
+
+.thumbnail-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main image */
+.main-image-container {
+  flex: 1;
+}
+
+.main-image-wrapper {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(243 244 246);
+}
+
+.main-image {
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
+  position: relative;
+  aspect-ratio: 1/1;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile thumbnails */
+.mobile-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .gallery{
+    height: 50%;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-thumbnails {
+    display: none;
+  }
+}
+
+/* Image styles */
+.gallery-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

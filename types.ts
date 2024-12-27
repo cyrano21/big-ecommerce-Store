@@ -31,6 +31,9 @@ export interface Product {
 export interface Image {
   id: string;
   url: string;
+  colorId?: string;
+  variationId?: string; // Ajout de cette propriété
+  color?: Color;
 }
 
 export interface Size {

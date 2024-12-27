@@ -1,67 +1,81 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { Tab } from '@headlessui/react';
-import classNames from 'classnames/dedupe'; // changed to dedupe import
-
-import { Image as ImageType } from '@/types';
+import Image from "next/image";
+import { Tab } from "@headlessui/react";
+import { Image as ImageType } from "@/types";
+import { cn } from "@/lib/utils";
+import "./gallery.css";
 
 interface GalleryProps {
   images: ImageType[];
+  selectedIndex?: number;
+  onImageSelect: (index: number) => void;
+  selectedVariationId?: string;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ images = [] }) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+const Gallery: React.FC<GalleryProps> = ({ 
+  images,
+  selectedIndex = 0,
+  onImageSelect,
+  selectedVariationId
+}) => {
+  const filteredImages = selectedVariationId
+    ? images.filter(img => img.variationId === selectedVariationId)
+    : images;
+
+  console.log("Gallery rendering with:", {
+    selectedVariationId,
+    filteredImagesCount: filteredImages.length,
+    selectedIndex
+  });
+
+  // Trouver l'index relatif dans les images filtrées
+  const currentFilteredIndex = filteredImages.findIndex(
+    img => img.id === images[selectedIndex]?.id
+  );
+
+  const handleThumbnailClick = (filteredIndex: number) => {
+    const selectedImage = filteredImages[filteredIndex];
+    const originalIndex = images.findIndex(img => img.id === selectedImage.id);
+    console.log("Thumbnail click:", { filteredIndex, originalIndex });
+    onImageSelect(originalIndex);
+  };
 
   return (
-    <div className="flex flex-col px-2">
-      <div className="mx-auto mt-6 w-full max-w-2xl sm:block lg:max-w-none">
-        <div className="flex flex-col-reverse">
-          <div className="mx-auto mt-6 mb-6 w-full max-w-2xl sm:block lg:max-w-none">
-            <div className="grid grid-cols-4 gap-6">
-              {images.map((image, index) => (
-                <div
-                  key={image.id}
-                  onMouseEnter={() => setSelectedImageIndex(index)}
-                  className={`
-                    relative 
-                    flex 
-                    aspect-square 
-                    items-center 
-                    justify-center 
-                    rounded-md 
-                    bg-white 
-                    hover:bg-gray-50 
-                    ${selectedImageIndex === index 
-                      ? 'ring-2 ring-indigo-500' 
-                      : 'hover:opacity-75'}
-                  `}
-                >
-                  <div className="absolute inset-0 overflow-hidden rounded-md">
-                    <Image
-                      src={image.url}
-                      alt="Product Thumbnail"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-contain object-center"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="aspect-square relative w-full sm:rounded-lg overflow-hidden flex items-center justify-center bg-gray-100">
-            {images.length > 0 && (
-              <Image
-                src={images[selectedImageIndex]?.url || '/placeholder-product.jpg'}
-                alt="Product Image"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-contain object-center"
-              />
+    <div className="gallery-container">
+      {/* Colonne des miniatures */}
+      <div className="thumbnails-column">
+        {filteredImages.map((image, index) => (
+          <div 
+            key={image.id}
+            onClick={() => handleThumbnailClick(index)}
+            className={cn(
+              "thumbnail-item",
+              index === currentFilteredIndex && "selected"
             )}
+          >
+            <Image
+              src={image.url}
+              alt={`Miniature ${index + 1}`}
+              width={80}
+              height={80}
+              className="thumbnail-image"
+            />
           </div>
+        ))}
+      </div>
+
+      {/* Image principale */}
+      <div className="main-image-section">
+        <div className="main-image-wrapper">
+          <Image
+            src={filteredImages[currentFilteredIndex]?.url || images[0].url}
+            alt="Image principale"
+            fill
+            priority
+            className="main-image"
+            sizes="(max-inline-size: 768px) 100vw, (max-inline-size: 1200px) 50vw, 33vw"
+          />
         </div>
       </div>
     </div>

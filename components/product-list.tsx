@@ -84,21 +84,23 @@ const ProductList: React.FC<ProductListProps> = ({
     }
   };
 
+  // -------------------------------------------------------------------
+  // ICI nous modifions la classe qui contrôle la largeur : "max-w-6xl"
+  // Pour l'élargir, on peut par exemple utiliser "max-w-7xl"
+  // -------------------------------------------------------------------
   const gridClasses = variant === 'similar' 
-    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" 
+    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
     : variant === 'homepage'
-    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-6xl mx-auto"
+    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-7xl mx-auto" // <-- Changement ici : max-w-7xl au lieu de max-w-6xl
     : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4";
 
   // Filtrer les produits disponibles
   const availableItems = items.filter(item => {
-    // Si le produit n'a pas de variations, on le considère comme disponible
     if (!item.variations || item.variations.length === 0) {
       console.log('Product without variations:', item);
       return true;
     }
     
-    // Si le produit a des variations, vérifier si au moins une variation a du stock
     const hasAvailableVariation = item.variations.some(
       (variation: ProductVariation) => variation && variation.stock > 0
     );
