@@ -5,10 +5,12 @@ import { ShoppingCart, X } from "lucide-react";
 import useCart from "@/hooks/use-cart";
 import Currency from "@/components/ui/currency";
 import { motion, AnimatePresence } from "framer-motion";
+import Button from "./ui/Button";
+import Image from "next/image";
 
 // Fonction utilitaire pour convertir le prix
 const getNumericPrice = (price: string | number): number => {
-  return typeof price === 'string' ? Number(price) : price;
+  return typeof price === "string" ? Number(price) : price;
 };
 
 const NavbarAction = () => {
@@ -26,28 +28,28 @@ const NavbarAction = () => {
 
   // Calculer le prix total et la quantité totale
   const totalPrice = cart.items.reduce(
-    (total, item) => total + getNumericPrice(item.price) * (item.quantity || 1), 
+    (total, item) => total + getNumericPrice(item.price) * (item.quantity || 1),
     0
   );
 
   const totalQuantity = cart.items.reduce(
-    (total, item) => total + (item.quantity || 1), 
+    (total, item) => total + (item.quantity || 1),
     0
   );
 
   return (
     <div className="ml-auto flex items-center gap-x-4">
       {/* Panier */}
-      <div 
+      <div
         onClick={() => setIsCartOpen(true)}
         className="relative cursor-pointer"
       >
-        <ShoppingCart 
-          size={24} 
-          className="text-gray-500 hover:text-gray-700 transition" 
+        <ShoppingCart
+          size={24}
+          className="text-gray-500 hover:text-gray-700 transition"
         />
         {totalQuantity > 0 && (
-          <span 
+          <span
             className="
               absolute 
               -top-2 
@@ -80,12 +82,13 @@ const NavbarAction = () => {
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold">Votre Panier</h2>
-              <button 
+              <Button
+                type="button"
                 onClick={() => setIsCartOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
                 <X size={24} />
-              </button>
+              </Button>
             </div>
 
             {cart.items.length === 0 ? (
@@ -95,24 +98,33 @@ const NavbarAction = () => {
             ) : (
               <div className="space-y-4">
                 {cart.items.map((item) => (
-                  <div 
-                    key={`${item.id}-${item.selectedVariation?.id}`} 
+                  <div
+                    key={`${item.id}-${item.selectedVariation?.id}`}
                     className="flex items-center justify-between border-b pb-4"
                   >
                     <div className="flex items-center space-x-4">
-                      <img 
-                        src={item.images[0]?.url} 
-                        alt={item.name} 
-                        className="w-16 h-16 object-cover rounded"
+                      <Image
+                        src={item.images[0]?.url}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="object-cover rounded"
                       />
                       <div>
                         <h3 className="font-semibold">{item.name}</h3>
                         {item.selectedVariation && (
                           <div className="text-sm text-gray-500">
                             {item.selectedVariation.color && (
-                              <span 
-                                className="inline-block w-4 h-4 rounded-full mr-2" 
-                                style={{ backgroundColor: item.selectedVariation.color.value }}
+                              <span
+                                className={`inline-block w-4 h-4 rounded-full mr-2 ${
+                                  item.selectedVariation.color
+                                    ? "color-" +
+                                      item.selectedVariation.color.value.replace(
+                                        "#",
+                                        ""
+                                      )
+                                    : ""
+                                }`}
                               />
                             )}
                             {item.selectedVariation.size && (
@@ -124,47 +136,58 @@ const NavbarAction = () => {
                     </div>
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center border rounded">
-                        <button 
-                          onClick={() => cart.updateItemQuantity(
-                            item.id,
-                            Math.max(1, (item.quantity || 1) - 1)
-                          )}
+                        <Button
+                          onClick={() =>
+                            cart.updateItemQuantity(
+                              item.id,
+                              Math.max(1, (item.quantity || 1) - 1)
+                            )
+                          }
                           className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                         >
                           -
-                        </button>
+                        </Button>
                         <span className="px-4">{item.quantity || 1}</span>
-                        <button 
-                          onClick={() => cart.updateItemQuantity(
-                            item.id,
-                            (item.quantity || 1) + 1
-                          )}
+                        <Button
+                          onClick={() =>
+                            cart.updateItemQuantity(
+                              item.id,
+                              (item.quantity || 1) + 1
+                            )
+                          }
                           className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                         >
                           +
-                        </button>
+                        </Button>
                       </div>
                       <div className="flex items-center">
-                        <Currency value={getNumericPrice(item.price) * (item.quantity || 1)} />
-                        <button 
-                          onClick={() => cart.removeItem(item.id)} 
-                          className="ml-2 text-red-500"
+                        <Currency
+                          value={
+                            getNumericPrice(item.price) * (item.quantity || 1)
+                          }
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => setIsCartOpen(false)}
+                          className="text-gray-500 hover:text-gray-700"
                         >
-                          <X size={16} />
-                        </button>
+                          <X size={24} />
+                        </Button>
                       </div>
                     </div>
                   </div>
                 ))}
-                
+
                 <div className="mt-6 flex justify-between items-center">
                   <span className="text-lg font-semibold">Total</span>
                   <Currency value={totalPrice} />
                 </div>
-                
-                <button 
+
+                <button
                   className="w-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
-                  onClick={() => {/* Logique de paiement */}}
+                  onClick={() => {
+                    /* Logique de paiement */
+                  }}
                 >
                   Procéder au paiement
                 </button>

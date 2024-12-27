@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
-import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
-import useCart from '@/hooks/use-cart';
-import Currency from '@/components/ui/currency';
-import Button from '@/components/ui/Button';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
+import useCart from "@/hooks/use-cart";
+import Currency from "@/components/ui/currency";
+import Button from "@/components/ui/Button";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const Cart: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +14,12 @@ const Cart: React.FC = () => {
 
   // Fonction utilitaire pour convertir le prix
   const getNumericPrice = (price: string | number): number => {
-    return typeof price === 'string' ? Number(price) : price;
+    return typeof price === "string" ? Number(price) : price;
   };
 
   // Calculer le prix total en utilisant la fonction de conversion
-  const totalPrice = items.reduce((total, item) => 
-    total + (getNumericPrice(item.price) * (item.quantity || 1)), 
+  const totalPrice = items.reduce(
+    (total, item) => total + getNumericPrice(item.price) * (item.quantity || 1),
     0
   );
 
@@ -26,21 +27,18 @@ const Cart: React.FC = () => {
 
   return (
     <div className="relative">
-      <button 
-        onClick={toggleCart}
-        className="relative group"
-      >
-        <ShoppingCart 
+      <button onClick={toggleCart} className="relative group">
+        <ShoppingCart
           className="
             w-6 
             h-6 
             text-gray-700 
             group-hover:text-purple-600 
             transition-colors
-          " 
+          "
         />
         {items.length > 0 && (
-          <span 
+          <span
             className="
               absolute 
               -top-2 
@@ -83,7 +81,7 @@ const Cart: React.FC = () => {
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Votre Panier</h2>
-              <button 
+              <button
                 onClick={toggleCart}
                 className="text-gray-500 hover:text-red-500 transition-colors"
               >
@@ -99,69 +97,81 @@ const Cart: React.FC = () => {
               <>
                 <div className="space-y-4 max-h-[60vh] overflow-y-auto">
                   {items.map((item) => (
-                    <div 
-                      key={item.id} 
-                      className="flex items-center justify-between border-b pb-4 last:border-b-0"
-                    >
-                      <div className="flex items-center space-x-4">
-                        {/* Image du produit */}
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
-                          <img 
-                            src={item.images[0]?.url} 
-                            alt={item.name} 
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                    <div key={item.id} className="flex py-6 border-b">
+                      <div className="relative h-24 w-24 rounded-md overflow-hidden sm:h-48 sm:w-48">
+                        <Image
+                          fill
+                          src={item.images[0].url}
+                          alt={item.name}
+                          className="object-cover object-center"
+                        />
+                      </div>
 
-                        {/* Détails du produit */}
-                        <div>
-                          <h3 className="text-lg font-semibold">{item.name}</h3>
-                          
-                          {/* Affichage conditionnel de la variation */}
-                          {item.selectedVariation && (
-                            <div className="text-sm text-gray-600 space-x-2">
-                              {item.selectedVariation.color && (
-                                <span 
-                                  className="inline-block w-4 h-4 rounded-full" 
-                                  style={{ backgroundColor: item.selectedVariation.color.value }}
-                                />
-                              )}
-                              {item.selectedVariation.size && (
-                                <span>{item.selectedVariation.size.name}</span>
-                              )}
-                            </div>
-                          )}
-                          
-                          {/* Prix */}
-                          <p className="text-sm text-gray-500 mt-1">
-                            <Currency value={item.price} />
-                          </p>
-                        </div>
+                      {/* Détails du produit */}
+                      <div>
+                        <h3 className="text-lg font-semibold">{item.name}</h3>
+
+                        {/* Affichage conditionnel de la variation */}
+                        {item.selectedVariation && (
+                          <div className="text-sm text-gray-600 space-x-2">
+                            {item.selectedVariation.color && (
+                              <span
+                                className={`inline-block w-4 h-4 rounded-full ${
+                                  item.selectedVariation.color
+                                    ? "color-" +
+                                      item.selectedVariation.color.value.replace(
+                                        "#",
+                                        ""
+                                      )
+                                    : ""
+                                }`}
+                              />
+                            )}
+                            {item.selectedVariation.size && (
+                              <span>{item.selectedVariation.size.name}</span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Prix */}
+                        <p className="text-sm text-gray-500 mt-1">
+                          <Currency value={item.price} />
+                        </p>
                       </div>
 
                       {/* Quantité et suppression */}
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center border rounded">
-                          <button 
-                            onClick={() => updateItemQuantity(item.id, Math.max(1, (item.quantity || 1) - 1))}
+                          <button
+                            onClick={() =>
+                              updateItemQuantity(
+                                item.id,
+                                Math.max(1, (item.quantity || 1) - 1)
+                              )
+                            }
                             className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                           >
                             -
                           </button>
                           <span className="px-4">{item.quantity}</span>
-                          <button 
-                            onClick={() => updateItemQuantity(item.id, (item.quantity || 1) + 1)}
+                          <Button
+                            onClick={() =>
+                              updateItemQuantity(
+                                item.id,
+                                (item.quantity || 1) + 1
+                              )
+                            }
                             className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                           >
                             +
-                          </button>
+                          </Button>
                         </div>
-                        <button 
+                        <Button
                           onClick={() => removeItem(item.id)}
                           className="text-red-500 hover:text-red-700"
                         >
                           <Trash2 size={16} />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -171,7 +181,7 @@ const Cart: React.FC = () => {
                     <span className="text-gray-700">Total</span>
                     <Currency value={totalPrice} className="font-bold" />
                   </div>
-                  <Button 
+                  <Button
                     className="
                       w-full 
                       bg-purple-600 

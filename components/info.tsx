@@ -65,7 +65,8 @@ const Info: React.FC<InfoProps> = ({ data, onImageSelect }) => {
   type="button"
   onClick={() => setIsFavorite(!isFavorite)}
   className="favorite-button"
-  title="Add to favorites"
+  aria-label={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+  title={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
 >
   <Heart 
     size={24} 
@@ -159,6 +160,8 @@ const Info: React.FC<InfoProps> = ({ data, onImageSelect }) => {
                     variation.stock === 0 && "out-of-stock"
                   )}
                   disabled={variation.stock === 0}
+                  aria-label={`Sélectionner la taille ${variation.size?.name}`}
+                  title={`Sélectionner la taille ${variation.size?.name}`}
                 >
                   <span>{variation.size?.name}</span>
                   {variation.stock === 0 && (
@@ -176,9 +179,14 @@ const Info: React.FC<InfoProps> = ({ data, onImageSelect }) => {
           onClick={onAddToCart} 
           className="add-to-cart-button"
           disabled={!selectedVariation || selectedVariation.stock === 0}
+          aria-label="Ajouter au panier"
+          title="Ajouter au panier"
         >
           Ajouter au panier
-          <ShoppingCart size={20} />
+          <ShoppingCart 
+            size={20} 
+            aria-hidden="true"
+          />
         </Button>
       </div>
     </div>

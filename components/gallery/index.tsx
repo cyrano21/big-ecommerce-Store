@@ -13,30 +13,32 @@ interface GalleryProps {
   selectedVariationId?: string;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ 
+const Gallery: React.FC<GalleryProps> = ({
   images,
   selectedIndex = 0,
   onImageSelect,
-  selectedVariationId
+  selectedVariationId,
 }) => {
   const filteredImages = selectedVariationId
-    ? images.filter(img => img.variationId === selectedVariationId)
+    ? images.filter((img) => img.variationId === selectedVariationId)
     : images;
 
   console.log("Gallery rendering with:", {
     selectedVariationId,
     filteredImagesCount: filteredImages.length,
-    selectedIndex
+    selectedIndex,
   });
 
   // Trouver l'index relatif dans les images filtrées
   const currentFilteredIndex = filteredImages.findIndex(
-    img => img.id === images[selectedIndex]?.id
+    (img) => img.id === images[selectedIndex]?.id
   );
 
   const handleThumbnailClick = (filteredIndex: number) => {
     const selectedImage = filteredImages[filteredIndex];
-    const originalIndex = images.findIndex(img => img.id === selectedImage.id);
+    const originalIndex = images.findIndex(
+      (img) => img.id === selectedImage.id
+    );
     console.log("Thumbnail click:", { filteredIndex, originalIndex });
     onImageSelect(originalIndex);
   };
@@ -46,7 +48,7 @@ const Gallery: React.FC<GalleryProps> = ({
       {/* Colonne des miniatures */}
       <div className="thumbnails-column">
         {filteredImages.map((image, index) => (
-          <div 
+          <div
             key={image.id}
             onClick={() => handleThumbnailClick(index)}
             className={cn(
@@ -74,7 +76,12 @@ const Gallery: React.FC<GalleryProps> = ({
             fill
             priority
             className="main-image"
-            sizes="(max-inline-size: 768px) 100vw, (max-inline-size: 1200px) 50vw, 33vw"
+            sizes="100%"
+            style={{
+              objectFit: "contain",
+              maxWidth: "100%",
+              maxHeight: "100%",
+            }}
           />
         </div>
       </div>
